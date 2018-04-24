@@ -1,0 +1,15 @@
+{
+  "namespace": "no.nav.opptjening.skatt.schema.hendelsesliste",
+  "type": "record",
+  "name": "Feilmelding",
+  "fields": [
+    {
+      "name": "kode",
+      "type": "string"
+    },
+    {
+      "name": "melding",
+      "type": "string"
+    }
+  ]
+}
