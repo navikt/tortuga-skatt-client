@@ -5,10 +5,10 @@
 
     <groupId>no.nav.opptjening</groupId>
     <artifactId>skatt-client</artifactId>
-    <version>1</version>
+    <version>0</version>
     <packaging>jar</packaging>
 
-    <name>skatt-client</name>
+    <name>tortuga-skatt-client</name>
     <description>REST-Klient for Skatteetaten sine API-er</description>
 
     <properties>
@@ -79,4 +79,12 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>iapp-releases</id>
+            <url>https://repo.adeo.no/repository/maven-releases</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+    </distributionManagement>
 </project>
