@@ -50,7 +50,8 @@ class RequestResponseLogger implements HttpLoggingInterceptor.Logger {
             return;
         }
 
-        try (BufferedSource source = responseBody.source()) {
+        try {
+            BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE); // Buffer the entire body.
             Buffer buffer = source.buffer();
 
@@ -63,8 +64,6 @@ class RequestResponseLogger implements HttpLoggingInterceptor.Logger {
             sb.append('\n').append(buffer.clone().readString(charset));
         } catch (IOException e) {
             /* dont log? */
-        } finally {
-            responseBody.close();
         }
 
         LOG.debug(sb.toString());
