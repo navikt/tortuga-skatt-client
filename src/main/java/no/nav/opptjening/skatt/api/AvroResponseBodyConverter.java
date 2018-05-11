@@ -36,6 +36,10 @@ public class AvroResponseBodyConverter<T extends SpecificRecord> implements Conv
         SpecificDatumReader<T> reader = new SpecificDatumReader<>(schema);
         JsonDecoder jsonDecoder = DecoderFactory.get().jsonDecoder(schema, value.byteStream());
 
-        return reader.read(null, jsonDecoder);
+        try {
+            return reader.read(null, jsonDecoder);
+        } finally {
+            value.close();
+        }
     }
 }
