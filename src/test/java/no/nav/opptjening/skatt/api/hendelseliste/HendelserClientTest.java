@@ -33,7 +33,7 @@ public class HendelserClientTest {
 
     @Before
     public void setUp() throws Exception {
-        this.hendelserClient = new SkatteoppgjoerhendelserClient(server.url("/formueinntekt/beregnetskatt/").toString(), "my-api-key");
+        this.hendelserClient = new SkatteoppgjoerhendelserClient(server.url("/formueinntekt/skatteoppgjoer/").toString(), "my-api-key");
     }
 
     @Test
@@ -48,7 +48,7 @@ public class HendelserClientTest {
         Sekvensnummer result = hendelserClient.forsteSekvensEtter(date);
 
         RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/beregnetskatt/hendelser/start?dato=2017-01-01", request.getPath());
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/start?dato=2017-01-01", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
         Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
 
@@ -72,7 +72,7 @@ public class HendelserClientTest {
         }
 
         RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/beregnetskatt/hendelser/start?dato=2017-01-01", request.getPath());
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/start?dato=2017-01-01", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
         Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
@@ -94,7 +94,7 @@ public class HendelserClientTest {
         }
 
         RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/beregnetskatt/hendelser/start?dato=2017-01-01", request.getPath());
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/start?dato=2017-01-01", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
         Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
@@ -118,7 +118,7 @@ public class HendelserClientTest {
         Hendelsesliste result = hendelserClient.getHendelser(10, 1000);
 
         RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/beregnetskatt/hendelser?fraSekvensnummer=10&antall=1000", request.getPath());
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
         Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
 
@@ -149,7 +149,7 @@ public class HendelserClientTest {
         }
 
         RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/beregnetskatt/hendelser?fraSekvensnummer=10&antall=1000", request.getPath());
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
         Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
@@ -170,7 +170,7 @@ public class HendelserClientTest {
         }
 
         RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/beregnetskatt/hendelser?fraSekvensnummer=10&antall=1000", request.getPath());
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
         Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
@@ -191,7 +191,7 @@ public class HendelserClientTest {
         }
 
         RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/beregnetskatt/hendelser?fraSekvensnummer=10&antall=1000", request.getPath());
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
         Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
@@ -212,7 +212,7 @@ public class HendelserClientTest {
         }
 
         RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/beregnetskatt/hendelser?fraSekvensnummer=10&antall=1000", request.getPath());
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
         Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
@@ -233,7 +233,7 @@ public class HendelserClientTest {
         }
 
         RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/beregnetskatt/hendelser?fraSekvensnummer=10&antall=1000", request.getPath());
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
         Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
