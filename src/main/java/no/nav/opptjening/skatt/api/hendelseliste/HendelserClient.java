@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 public abstract class HendelserClient extends AbstractClient<HendelserApi> {
 
-    public HendelserClient(String endepunkt) {
-        super(endepunkt, HendelserApi.class);
+    public HendelserClient(String endepunkt, String apiKey) {
+        super(endepunkt, apiKey, HendelserApi.class);
     }
 
     public Sekvensnummer forsteSekvensEtter(LocalDate dato) throws IOException {

@@ -22,7 +22,7 @@ public class BeregnetSkattClientTest {
 
     @Before
     public void setUp() throws Exception {
-        this.beregnetSkattClient = new BeregnetSkattClient(server.url("/").toString());
+        this.beregnetSkattClient = new BeregnetSkattClient(server.url("/").toString(), "my-api-key");
     }
 
     @Test
@@ -73,6 +73,7 @@ public class BeregnetSkattClientTest {
         RecordedRequest request = server.takeRequest();
         Assert.assertEquals("/nav/2016/12345678901", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
+        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
 
         Assert.assertEquals("12345678901", result.getPersonidentifikator());
         Assert.assertEquals("2016", result.getInntektsaar());
@@ -127,6 +128,7 @@ public class BeregnetSkattClientTest {
         RecordedRequest request = server.takeRequest();
         Assert.assertEquals("/nav/2016/12345", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
+        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
@@ -147,6 +149,7 @@ public class BeregnetSkattClientTest {
         RecordedRequest request = server.takeRequest();
         Assert.assertEquals("/nav/2016/12345", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
+        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
@@ -167,6 +170,7 @@ public class BeregnetSkattClientTest {
         RecordedRequest request = server.takeRequest();
         Assert.assertEquals("/nav/2016/12345", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
+        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
@@ -187,6 +191,7 @@ public class BeregnetSkattClientTest {
         RecordedRequest request = server.takeRequest();
         Assert.assertEquals("/nav/2016/12345", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
+        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
@@ -207,5 +212,6 @@ public class BeregnetSkattClientTest {
         RecordedRequest request = server.takeRequest();
         Assert.assertEquals("/nav/2016/12345", request.getPath());
         Assert.assertEquals("GET", request.getMethod());
+        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 }

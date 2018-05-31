@@ -9,8 +9,8 @@ import java.io.IOException;
 
 public class BeregnetSkattClient extends AbstractClient<BeregnetSkattApi> {
 
-    public BeregnetSkattClient(String endepunkt) {
-        super(endepunkt, BeregnetSkattApi.class);
+    public BeregnetSkattClient(String endepunkt, String apiKey) {
+        super(endepunkt, apiKey, BeregnetSkattApi.class);
     }
 
     public BeregnetSkatt getBeregnetSkatt(String rettighetspakke, String inntektsaar, String personidentifikator) throws IOException {

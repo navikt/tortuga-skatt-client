@@ -24,18 +24,23 @@ public abstract class AbstractClient<T> {
 
     private SkatteetatenErrorResponseMapper errorResponseMapper;
 
-    protected AbstractClient(String endepunkt, Class<T> api) {
-        Retrofit retrofit = createRetrofit(endepunkt);
+    protected AbstractClient(String endepunkt, String apiKey, Class<T> api) {
+        Retrofit retrofit = createRetrofit(createHttpClient(apiKey), endepunkt);
 
         this.api = retrofit.create(api);
         this.errorResponseMapper = new SkatteetatenErrorResponseMapper(retrofit);
     }
 
-    private static Retrofit createRetrofit(String baseUrl) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(new RequestResponseLogger());
+    private static OkHttpClient createHttpClient(String apiKey) {
+        return new OkHttpClient.Builder()
+                .addInterceptor(new HttpLoggingInterceptor(new RequestResponseLogger()))
+                .addInterceptor(new HeaderInterceptor("X-NAV-APIKEY", apiKey))
+                .build();
+    }
 
+    private static Retrofit createRetrofit(OkHttpClient client, String baseUrl) {
         return new Retrofit.Builder()
-                .client(new OkHttpClient.Builder().addInterceptor(interceptor).build())
+                .client(client)
                 .baseUrl(baseUrl)
                 .addConverterFactory(AvroConverterFactory.create())
                 .build();
