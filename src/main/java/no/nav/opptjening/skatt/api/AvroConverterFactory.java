@@ -12,14 +12,23 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AvroConverterFactory extends Converter.Factory {
+
+    private final Map<Class<?>, Converter<ResponseBody, ?>> converters;
+
     public AvroConverterFactory() {
-        super();
+        this(null);
     }
 
-    @Override
-    public Converter<ResponseBody, ? extends SpecificRecord> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+    public AvroConverterFactory(Map<Class<?>, Converter<ResponseBody, ?>> converters) {
+        super();
+        this.converters = converters;
+    }
+
+    private Converter<ResponseBody, ? extends SpecificRecord> defaultConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
         Schema schema = getSchema(getRawType(type));
 
         if (schema == null) {
@@ -27,6 +36,18 @@ public class AvroConverterFactory extends Converter.Factory {
         }
 
         return new AvroResponseBodyConverter<>(schema, type, annotations, retrofit);
+    }
+
+    @Override
+    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+        if (converters != null) {
+            for (Map.Entry<Class<?>, Converter<ResponseBody, ?>> entry : converters.entrySet()) {
+                if (entry.getKey().getTypeName().equals(type.getTypeName())) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return defaultConverter(type, annotations, retrofit);
     }
 
     public static Converter.Factory create() {
@@ -71,5 +92,22 @@ public class AvroConverterFactory extends Converter.Factory {
         }
 
         return null;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final Map<Class<?>, Converter<ResponseBody, ?>> converters = new HashMap<>();
+
+        public Builder addConverter(Class<?> clazz, Converter<ResponseBody, ?> converter) {
+            converters.put(clazz, converter);
+            return this;
+        }
+
+        public AvroConverterFactory build() {
+            return new AvroConverterFactory(converters);
+        }
     }
 }

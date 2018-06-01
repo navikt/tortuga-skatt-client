@@ -107,7 +107,7 @@ public class HendelserClientTest {
         mockHendelser.add(new HendelseDto(10, "12345", "2016"));
         mockHendelser.add(new HendelseDto(11, "67891", "2017"));
 
-        response.put("hendelser", mockHendelser);
+        response.put("hendelse", mockHendelser);
 
         server.enqueue(new MockResponse()
                 .setBody(new ObjectMapper().writeValueAsString(response))
@@ -131,6 +131,24 @@ public class HendelserClientTest {
         Assert.assertEquals(11, (long)result.getHendelser().get(1).getSekvensnummer());
         Assert.assertEquals("67891", result.getHendelser().get(1).getIdentifikator());
         Assert.assertEquals("2017", result.getHendelser().get(1).getGjelderPeriode());
+    }
+
+    @Test
+    public void when_fraSekvensnummerIsBeyondWhatHasBeenPublished_Then_SkatteetatenRespondsWithEmptyBody_AndWeReturnAnEmptyList() throws Exception {
+        server.enqueue(new MockResponse()
+                .setBody("{}")
+                .setResponseCode(200)
+                .addHeader("Content-Type", "application/json")
+        );
+
+        Hendelsesliste result = hendelserClient.getHendelser(10, 1000);
+
+        RecordedRequest request = server.takeRequest();
+        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
+        Assert.assertEquals("GET", request.getMethod());
+        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
+
+        Assert.assertEquals(0, result.getHendelser().size());
     }
 
     @Test

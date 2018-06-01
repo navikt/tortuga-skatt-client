@@ -2,9 +2,11 @@
   "namespace": "no.nav.opptjening.skatt.schema.hendelsesliste",
   "type": "record",
   "name": "Hendelsesliste",
+  "doc": "https://skatteetaten.github.io/datasamarbeid-api-dokumentasjon/reference_feed",
   "fields": [
     {
       "name": "hendelser",
+      "default": [],
       "type": {
         "type": "array",
         "items": {
