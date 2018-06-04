@@ -33,11 +33,14 @@ public class AvroResponseBodyConverter<T extends SpecificRecord> implements Conv
 
     @Override
     public T convert(ResponseBody value) throws IOException {
-        SpecificDatumReader<T> reader = new SpecificDatumReader<>(schema);
-        JsonDecoder jsonDecoder = DecoderFactory.get().jsonDecoder(schema, value.byteStream());
+        String body = value.string();
 
+        SpecificDatumReader<T> reader = new SpecificDatumReader<>(schema);
         try {
+            JsonDecoder jsonDecoder = DecoderFactory.get().jsonDecoder(schema, body);
             return reader.read(null, jsonDecoder);
+        } catch (IOException e) {
+            throw new IOException("Failed to parse JSON body: " + body, e);
         } finally {
             value.close();
         }

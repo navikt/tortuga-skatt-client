@@ -82,11 +82,13 @@ public abstract class AbstractClient<T> {
                     "}");
 
             String jsonString = value.string();
-            JsonDecoder jsonDecoder = DecoderFactory.get().jsonDecoder(writerSchema, jsonString);
 
             try {
                 SpecificDatumReader<Hendelsesliste> reader = new SpecificDatumReader<>(Hendelsesliste.SCHEMA$);
+                JsonDecoder jsonDecoder = DecoderFactory.get().jsonDecoder(writerSchema, jsonString);
                 return reader.read(null, jsonDecoder);
+            } catch (IOException e) {
+                throw new IOException("Failed to parse JSON body: " + jsonString, e);
             } catch (AvroTypeException e) {
                 // TODO: remove this workaround as soon as Skatteetaten changes the response when the hendelsesliste has been read in full.
                 if ("{}".equals(jsonString.replaceAll("\\s+",""))) {
