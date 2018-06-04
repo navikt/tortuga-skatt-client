@@ -13,6 +13,9 @@ public interface HendelserApi {
     @GET("hendelser/start")
     Call<Sekvensnummer> sekvensnummerEtter(@Query("dato") LocalDate dato);
 
+    @GET("hendelser/start")
+    Call<Sekvensnummer> forsteSekvens();
+
     @GET("hendelser/")
     Call<Hendelsesliste> getHendelser(@Query("fraSekvensnummer") long fraSekvens, @Query("antall") int antall);
 }

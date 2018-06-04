@@ -37,6 +37,19 @@ public class HendelserClientTest {
     }
 
     @Test
+    public void when_NextSekvensnummerWithoutDateResponseIsOk_Then_ValuesAreMappedCorrectly() throws Exception {
+        String jsonBody = "{\"sekvensnummer\": 10}";
+
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/start"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.okJson(jsonBody)));
+
+        Sekvensnummer result = hendelserClient.forsteSekvens();
+
+        Assert.assertEquals(10, (long)result.getSekvensnummer());
+    }
+
+    @Test
     public void when_NextSekvensnummerAfterDateResponseIsOk_Then_ValuesAreMappedCorrectly() throws Exception {
         String jsonBody = "{\"sekvensnummer\": 10}";
 

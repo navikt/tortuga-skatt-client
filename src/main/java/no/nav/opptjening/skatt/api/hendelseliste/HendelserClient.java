@@ -20,6 +20,11 @@ public abstract class HendelserClient extends AbstractClient<HendelserApi> {
         return executeRequest(request);
     }
 
+    public Sekvensnummer forsteSekvens() throws IOException {
+        Call<Sekvensnummer> request = getApi().forsteSekvens();
+        return executeRequest(request);
+    }
+
     public Hendelsesliste getHendelser(long fraSekvens, int antall) throws IOException {
         Call<Hendelsesliste> request = getApi().getHendelser(fraSekvens, antall);
         return executeRequest(request);
