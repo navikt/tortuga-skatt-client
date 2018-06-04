@@ -1,17 +1,16 @@
 package no.nav.opptjening.skatt.api.hendelseliste;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.opptjening.skatt.api.skatteoppgjoer.SkatteoppgjoerhendelserClient;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import no.nav.opptjening.skatt.api.exceptions.ResponseUnmappableException;
 import no.nav.opptjening.skatt.api.exceptions.UkjentFeilkodeException;
 import no.nav.opptjening.skatt.api.hendelseliste.exceptions.MissingSekvensnummerException;
+import no.nav.opptjening.skatt.api.skatteoppgjoer.SkatteoppgjoerhendelserClient;
 import no.nav.opptjening.skatt.exceptions.ClientException;
 import no.nav.opptjening.skatt.exceptions.ServerException;
 import no.nav.opptjening.skatt.schema.hendelsesliste.Hendelsesliste;
 import no.nav.opptjening.skatt.schema.hendelsesliste.Sekvensnummer;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,42 +25,40 @@ import java.util.Map;
 import static org.junit.Assert.fail;
 
 public class HendelserClientTest {
+
     @Rule
-    public MockWebServer server = new MockWebServer();
+    public WireMockRule wireMockRule = new WireMockRule();
 
     private HendelserClient hendelserClient;
 
     @Before
     public void setUp() throws Exception {
-        this.hendelserClient = new SkatteoppgjoerhendelserClient(server.url("/formueinntekt/skatteoppgjoer/").toString(), "my-api-key");
+        this.hendelserClient = new SkatteoppgjoerhendelserClient("http://localhost:" + wireMockRule.port() + "/", "apikey");
     }
 
     @Test
     public void when_NextSekvensnummerAfterDateResponseIsOk_Then_ValuesAreMappedCorrectly() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{\"sekvensnummer\": 10}")
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json")
-        );
+        String jsonBody = "{\"sekvensnummer\": 10}";
+
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/start"))
+                .withQueryParam("dato", WireMock.equalTo("2017-01-01"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.okJson(jsonBody)));
 
         LocalDate date = LocalDate.of(2017, 1, 1);
         Sekvensnummer result = hendelserClient.forsteSekvensEtter(date);
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/start?dato=2017-01-01", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
 
         Assert.assertEquals(10, (long)result.getSekvensnummer());
     }
 
     @Test
     public void when_NextSekvensnummerAfterDateResponseIsUnexpectedFormat_Then_ThrowResponseUnmappableException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{\"sekvens\": 10}")
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json")
-        );
+        String jsonBody = "{\"sekvens\": 10}";
+
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/start"))
+                .withQueryParam("dato", WireMock.equalTo("2017-01-01"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.okJson(jsonBody)));
 
         try {
             LocalDate date = LocalDate.of(2017, 1, 1);
@@ -70,20 +67,16 @@ public class HendelserClientTest {
         } catch (ResponseUnmappableException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/start?dato=2017-01-01", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
     public void when_NextSekvensnummerAfterDateResponseIsGeneric4xxError_Then_ThrowClientException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("this is not valid json")
-                .setResponseCode(400)
-                .addHeader("Content-Type", "application/json")
-        );
+        String jsonBody = "{\"sekvensnummer\": 10}";
+
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/start"))
+                .withQueryParam("dato", WireMock.equalTo("2017-01-01"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.badRequest().withBody("this is not valid json").withHeader("Content-type", "application/json")));
 
         try {
             LocalDate date = LocalDate.of(2017, 1, 1);
@@ -92,11 +85,6 @@ public class HendelserClientTest {
         } catch (ClientException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/start?dato=2017-01-01", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
@@ -109,18 +97,15 @@ public class HendelserClientTest {
 
         response.put("hendelse", mockHendelser);
 
-        server.enqueue(new MockResponse()
-                .setBody(new ObjectMapper().writeValueAsString(response))
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json")
-        );
+        String jsonBody = new ObjectMapper().writeValueAsString(response);
+
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/"))
+                .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
+                .withQueryParam("antall", WireMock.equalTo("1000"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.okJson(jsonBody)));
 
         Hendelsesliste result = hendelserClient.getHendelser(10, 1000);
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
 
         Assert.assertEquals(2, result.getHendelser().size());
 
@@ -135,29 +120,24 @@ public class HendelserClientTest {
 
     @Test
     public void when_fraSekvensnummerIsBeyondWhatHasBeenPublished_Then_SkatteetatenRespondsWithEmptyBody_AndWeReturnAnEmptyList() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{}")
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/"))
+                .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
+                .withQueryParam("antall", WireMock.equalTo("1000"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.okJson("{}")));
 
         Hendelsesliste result = hendelserClient.getHendelser(10, 1000);
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
 
         Assert.assertEquals(0, result.getHendelser().size());
     }
 
     @Test
     public void when_HendelserResponseIsUnexpectedFormat_Then_ThrowResponseUnmappableException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{\"foo\": \"bar\"}")
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/"))
+                .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
+                .withQueryParam("antall", WireMock.equalTo("1000"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.okJson("{\"foo\": \"bar\"}")));
 
         try {
             hendelserClient.getHendelser(10, 1000);
@@ -165,20 +145,15 @@ public class HendelserClientTest {
         } catch (ResponseUnmappableException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
     public void when_fraSekvensnummerIsNotSet_Then_ThrowMissingSekvensnummerException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{\"kode\": \"FA-001\", \"melding\": \"fraSekvensnummer må være satt\"}")
-                .setResponseCode(400)
-                .addHeader("Content-Type", "application/json")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/"))
+                .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
+                .withQueryParam("antall", WireMock.equalTo("1000"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.badRequest().withHeader("Content-type", "application/json").withBody("{\"kode\": \"FA-001\", \"melding\": \"fraSekvensnummer må være satt\"}")));
 
         try {
             hendelserClient.getHendelser(10, 1000);
@@ -186,20 +161,15 @@ public class HendelserClientTest {
         } catch (MissingSekvensnummerException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
     public void when_feilkodeIsUnknown_Then_ThrowUkjentFeilkodeException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{\"kode\": \"ZZ-001\", \"melding\": \"Denne feilkoden er ikke implementert\"}")
-                .setResponseCode(400)
-                .addHeader("Content-Type", "application/json")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/"))
+                .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
+                .withQueryParam("antall", WireMock.equalTo("1000"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.badRequest().withHeader("Content-type", "application/json").withBody("{\"kode\": \"ZZ-001\", \"melding\": \"Denne feilkoden er ikke implementert\"}")));
 
         try {
             hendelserClient.getHendelser(10, 1000);
@@ -207,20 +177,15 @@ public class HendelserClientTest {
         } catch (UkjentFeilkodeException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
     public void when_HendelserResponseIsGeneric4xxError_Then_ThrowClientException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("bad request")
-                .setResponseCode(400)
-                .addHeader("Content-Type", "text/plain")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/"))
+                .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
+                .withQueryParam("antall", WireMock.equalTo("1000"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.badRequest().withBody("bad request")));
 
         try {
             hendelserClient.getHendelser(10, 1000);
@@ -228,32 +193,21 @@ public class HendelserClientTest {
         } catch (ClientException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
     public void when_HendelserResponseIsGeneric5xxError_Then_ThrowServerException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("internal server error")
-                .setResponseCode(500)
-                .addHeader("Content-Type", "text/plain")
-        );
-
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/"))
+                .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
+                .withQueryParam("antall", WireMock.equalTo("1000"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
+                .willReturn(WireMock.serverError().withBody("internal server error")));
         try {
             Hendelsesliste result = hendelserClient.getHendelser(10, 1000);
             fail("Expected an ServerException to be thrown");
         } catch (ServerException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/formueinntekt/skatteoppgjoer/hendelser/?fraSekvensnummer=10&antall=1000", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     private class HendelseDto {

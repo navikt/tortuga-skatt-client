@@ -1,12 +1,13 @@
 package no.nav.opptjening.skatt.api.beregnetskatt;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import no.nav.opptjening.skatt.api.exceptions.ResponseUnmappableException;
 import no.nav.opptjening.skatt.api.exceptions.UkjentFeilkodeException;
-import no.nav.opptjening.skatt.exceptions.*;
+import no.nav.opptjening.skatt.exceptions.BadRequestException;
+import no.nav.opptjening.skatt.exceptions.ClientException;
+import no.nav.opptjening.skatt.exceptions.ServerException;
 import no.nav.opptjening.skatt.schema.BeregnetSkatt;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -16,19 +17,18 @@ import static org.junit.Assert.fail;
 
 public class BeregnetSkattClientTest {
     @Rule
-    public MockWebServer server = new MockWebServer();
+    public WireMockRule wireMockRule = new WireMockRule();
 
     private BeregnetSkattClient beregnetSkattClient;
 
     @Before
     public void setUp() throws Exception {
-        this.beregnetSkattClient = new BeregnetSkattClient(server.url("/").toString(), "my-api-key");
+        this.beregnetSkattClient = new BeregnetSkattClient("http://localhost:" + wireMockRule.port() + "/", "my-api-key");
     }
 
     @Test
     public void when_ResponseIsOk_Then_CorrectValuesAreMappedOk() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{\n" +
+        String jsonBody = "{\n" +
                         "    \"personidentifikator\": \"12345678901\",\n" +
                         "    \"inntektsaar\": \"2016\",\n" +
                         "    \"sumSaerfradrag\": 80000,\n" +
@@ -62,18 +62,13 @@ public class BeregnetSkattClientTest {
                         "    \"svalbardUfoeretrygdLoennstrekkordningen\": 4564,\n" +
                         "    \"grunnlagTrinnskattUtenomPersoninntekt\": 324231,\n" +
                         "    \"personinntektUfoeretrygd\": 32232\n" +
-                        "}\n" +
-                        "\n")
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json")
-        );
+                        "}\n";
+
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/nav/2016/12345678901"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("my-api-key"))
+                .willReturn(WireMock.okJson(jsonBody)));
 
         BeregnetSkatt result = beregnetSkattClient.getBeregnetSkatt("nav","2016", "12345678901");
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/nav/2016/12345678901", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
 
         Assert.assertEquals("12345678901", result.getPersonidentifikator());
         Assert.assertEquals("2016", result.getInntektsaar());
@@ -112,11 +107,9 @@ public class BeregnetSkattClientTest {
 
     @Test
     public void when_ResponseCannotBeMappedToAvroSchema_Then_Throw() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{\"pensjonsgivendeInntekt\": 150000}")
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/nav/2016/12345"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("my-api-key"))
+                .willReturn(WireMock.okJson("{\"pensjonsgivendeInntekt\": 150000}")));
 
         try {
             beregnetSkattClient.getBeregnetSkatt("nav","2016", "12345");
@@ -124,20 +117,13 @@ public class BeregnetSkattClientTest {
         } catch (ResponseUnmappableException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/nav/2016/12345", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
     public void when_ResponseFailedWithFeilmelding_Then_ThrowMappedException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{\"kode\": \"BSA-005\", \"melding\": \"Det forespurte inntektsåret er ikke støttet\"}")
-                .setResponseCode(400)
-                .addHeader("Content-Type", "application/json")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/nav/2016/12345"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("my-api-key"))
+                .willReturn(WireMock.badRequest().withBody("{\"kode\": \"BSA-005\", \"melding\": \"Det forespurte inntektsåret er ikke støttet\"}")));
 
         try {
             beregnetSkattClient.getBeregnetSkatt("nav","2016", "12345");
@@ -145,20 +131,13 @@ public class BeregnetSkattClientTest {
         } catch (BadRequestException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/nav/2016/12345", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
     public void when_ReponseFailedWithUnknownFeilkode_Then_ThrowUkjentFeilkodeException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("{\"kode\": \"ZZ-001\", \"melding\": \"Denne feilkoden er ikke implementert\"}")
-                .setResponseCode(400)
-                .addHeader("Content-Type", "application/json")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/nav/2016/12345"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("my-api-key"))
+                .willReturn(WireMock.badRequest().withHeader("Content-type", "application/json").withBody("{\"kode\": \"ZZ-001\", \"melding\": \"Denne feilkoden er ikke implementert\"}")));
 
         try {
             beregnetSkattClient.getBeregnetSkatt("nav","2016", "12345");
@@ -166,20 +145,13 @@ public class BeregnetSkattClientTest {
         } catch (UkjentFeilkodeException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/nav/2016/12345", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
     public void when_ResponseFailedWithGeneric4xxError_Then_ThrowClientException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("bad request")
-                .setResponseCode(400)
-                .addHeader("Content-Type", "text/plan")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/nav/2016/12345"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("my-api-key"))
+                .willReturn(WireMock.badRequest().withBody("bad request")));
 
         try {
             beregnetSkattClient.getBeregnetSkatt("nav","2016", "12345");
@@ -187,20 +159,13 @@ public class BeregnetSkattClientTest {
         } catch (ClientException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/nav/2016/12345", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 
     @Test
     public void when_ResponseFailedWithGeneric5xxError_Then_ThrowServerException() throws Exception {
-        server.enqueue(new MockResponse()
-                .setBody("internal server error")
-                .setResponseCode(500)
-                .addHeader("Content-Type", "text/plan")
-        );
+        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/nav/2016/12345"))
+                .withHeader("X-Nav-Apikey", WireMock.equalTo("my-api-key"))
+                .willReturn(WireMock.serverError().withBody("internal server error")));
 
         try {
             beregnetSkattClient.getBeregnetSkatt("nav","2016", "12345");
@@ -208,10 +173,5 @@ public class BeregnetSkattClientTest {
         } catch (ServerException e) {
             // ok
         }
-
-        RecordedRequest request = server.takeRequest();
-        Assert.assertEquals("/nav/2016/12345", request.getPath());
-        Assert.assertEquals("GET", request.getMethod());
-        Assert.assertEquals("my-api-key", request.getHeader("X-NAV-APIKEY"));
     }
 }
