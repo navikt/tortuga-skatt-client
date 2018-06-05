@@ -1,5 +1,6 @@
 package no.nav.opptjening.skatt.api;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.opptjening.skatt.api.exceptions.ResponseUnmappableException;
@@ -34,6 +35,7 @@ public abstract class AbstractClient<T> {
 
         this.api = retrofit.create(api);
         this.errorResponseMapper = new SkatteetatenErrorResponseMapper(objectMapper);
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
     private static OkHttpClient createHttpClient(String apiKey) {
