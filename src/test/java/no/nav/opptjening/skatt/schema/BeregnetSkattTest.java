@@ -36,7 +36,8 @@ public class BeregnetSkattTest {
                 "    \"personinntektNaering\": 70000,\n" +
                 "    \"personinntektBarePensjonsdel\": 40000,\n" +
                 "    \"svalbardLoennLoennstrekkordningen\": 123456,\n" +
-                "    \"svalbardPersoninntektNaering\": 654321\n" +
+                "    \"svalbardPersoninntektNaering\": 654321," +
+                "    \"skjermet\": false\n" +
                 "}\n";
 
         BeregnetSkatt beregnetSkatt = mapper.readValue(jsonString, BeregnetSkatt.class);

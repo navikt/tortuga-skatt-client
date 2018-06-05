@@ -13,8 +13,9 @@ public final class BeregnetSkatt {
     private final long personinntektBarePensjonsdel;
     private final long svalbardLoennLoennstrekkordningen;
     private final long svalbardPersoninntektNaering;
+    private final boolean skjermet;
 
-    public BeregnetSkatt(String personidentifikator, String inntektsaar, long personinntektLoenn, long personinntektFiskeFangstFamiliebarnehage, long personinntektNaering, long personinntektBarePensjonsdel, long svalbardLoennLoennstrekkordningen, long svalbardPersoninntektNaering) {
+    public BeregnetSkatt(String personidentifikator, String inntektsaar, long personinntektLoenn, long personinntektFiskeFangstFamiliebarnehage, long personinntektNaering, long personinntektBarePensjonsdel, long svalbardLoennLoennstrekkordningen, long svalbardPersoninntektNaering, boolean skjermet) {
         this.personidentifikator = personidentifikator;
         this.inntektsaar = inntektsaar;
         this.personinntektLoenn = personinntektLoenn;
@@ -23,6 +24,7 @@ public final class BeregnetSkatt {
         this.personinntektBarePensjonsdel = personinntektBarePensjonsdel;
         this.svalbardLoennLoennstrekkordningen = svalbardLoennLoennstrekkordningen;
         this.svalbardPersoninntektNaering = svalbardPersoninntektNaering;
+        this.skjermet = skjermet;
     }
 
     public String getPersonidentifikator() {
@@ -57,6 +59,10 @@ public final class BeregnetSkatt {
         return svalbardPersoninntektNaering;
     }
 
+    public boolean isSkjermet() {
+        return skjermet;
+    }
+
     @Override
     public String toString() {
         return "BeregnetSkatt{" +
@@ -68,6 +74,7 @@ public final class BeregnetSkatt {
                 ", personinntektBarePensjonsdel=" + personinntektBarePensjonsdel +
                 ", svalbardLoennLoennstrekkordningen=" + svalbardLoennLoennstrekkordningen +
                 ", svalbardPersoninntektNaering=" + svalbardPersoninntektNaering +
+                ", skjermet=" + skjermet +
                 '}';
     }
 
@@ -84,6 +91,7 @@ public final class BeregnetSkatt {
         private long personinntektBarePensjonsdel;
         private long svalbardLoennLoennstrekkordningen;
         private long svalbardPersoninntektNaering;
+        private boolean skjermet;
 
         private Builder() {
         }
@@ -128,8 +136,13 @@ public final class BeregnetSkatt {
             return this;
         }
 
+        public Builder withSkjermet(boolean skjermet) {
+            this.skjermet = skjermet;
+            return this;
+        }
+
         public BeregnetSkatt build() {
-            return new BeregnetSkatt(personidentifikator, inntektsaar, personinntektLoenn, personinntektFiskeFangstFamiliebarnehage, personinntektNaering, personinntektBarePensjonsdel, svalbardLoennLoennstrekkordningen, svalbardPersoninntektNaering);
+            return new BeregnetSkatt(personidentifikator, inntektsaar, personinntektLoenn, personinntektFiskeFangstFamiliebarnehage, personinntektNaering, personinntektBarePensjonsdel, svalbardLoennLoennstrekkordningen, svalbardPersoninntektNaering, skjermet);
         }
     }
 }

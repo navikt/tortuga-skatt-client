@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public final class Feilmelding {
     private final String kode;
     private final String melding;
+    private final String korrelasjonsId;
 
     @JsonCreator
-    public Feilmelding(@JsonProperty("kode") String kode, @JsonProperty("melding") String melding) {
+    public Feilmelding(@JsonProperty("kode") String kode, @JsonProperty("melding") String melding, @JsonProperty("korrelasjonsid") String korrelasjonsId) {
         this.kode = kode;
         this.melding = melding;
+        this.korrelasjonsId = korrelasjonsId;
     }
 
     public String getKode() {
@@ -21,11 +23,16 @@ public final class Feilmelding {
         return melding;
     }
 
+    public String getKorrelasjonsId() {
+        return korrelasjonsId;
+    }
+
     @Override
     public String toString() {
         return "Feilmelding{" +
                 "kode='" + kode + '\'' +
                 ", melding='" + melding + '\'' +
+                ", korrelasjonsId='" + korrelasjonsId + '\'' +
                 '}';
     }
 }
