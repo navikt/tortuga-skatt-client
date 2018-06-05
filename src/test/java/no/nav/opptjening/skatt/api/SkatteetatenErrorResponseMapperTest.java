@@ -1,5 +1,6 @@
 package no.nav.opptjening.skatt.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.opptjening.skatt.api.exceptions.ResponseUnmappableException;
 import no.nav.opptjening.skatt.schema.hendelsesliste.Feilmelding;
 import okhttp3.MediaType;
@@ -8,14 +9,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class SkatteetatenErrorResponseMapperTest {
     private final Retrofit retrofit = new Retrofit.Builder()
-            .addConverterFactory(AvroConverterFactory.create())
+            .addConverterFactory(JacksonConverterFactory.create())
             .baseUrl("http://test")
             .build();
 
-    private final SkatteetatenErrorResponseMapper responseMapper = new SkatteetatenErrorResponseMapper(retrofit);
+    private final SkatteetatenErrorResponseMapper responseMapper = new SkatteetatenErrorResponseMapper(new ObjectMapper());
 
     @Test(expected = ResponseUnmappableException.class)
     public void when_ResponseDoesNotMatchSchema_Then_ThrowUnmappableException() {
