@@ -2,9 +2,9 @@ package no.nav.opptjening.skatt.api.hendelseliste.exceptions;
 
 import no.nav.opptjening.skatt.exceptions.BadRequestException;
 
-public class MissingSekvensnummerException extends BadRequestException {
+public class SekvensnummerMåVæreSattException extends BadRequestException {
 
-    public MissingSekvensnummerException(String message, Throwable cause) {
+    public SekvensnummerMåVæreSattException(String message, Throwable cause) {
         super(message, cause);
     }
 }

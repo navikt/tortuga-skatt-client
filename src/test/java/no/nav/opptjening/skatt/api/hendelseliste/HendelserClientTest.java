@@ -6,7 +6,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import no.nav.opptjening.skatt.Hendelsesliste;
 import no.nav.opptjening.skatt.Sekvensnummer;
 import no.nav.opptjening.skatt.api.exceptions.UkjentFeilkodeException;
-import no.nav.opptjening.skatt.api.hendelseliste.exceptions.MissingSekvensnummerException;
+import no.nav.opptjening.skatt.api.hendelseliste.exceptions.SekvensnummerMåVæreSattException;
 import no.nav.opptjening.skatt.api.skatteoppgjoer.SkatteoppgjoerhendelserClient;
 import no.nav.opptjening.skatt.exceptions.ClientException;
 import no.nav.opptjening.skatt.exceptions.ServerException;
@@ -135,8 +135,8 @@ public class HendelserClientTest {
 
         try {
             hendelserClient.getHendelser(10, 1000);
-            fail("Expected an MissingSekvensnummerException to be thrown");
-        } catch (MissingSekvensnummerException e) {
+            fail("Expected an SekvensnummerMåVæreSattException to be thrown");
+        } catch (SekvensnummerMåVæreSattException e) {
             // ok
         }
     }

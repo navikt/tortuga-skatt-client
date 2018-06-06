@@ -10,23 +10,23 @@ public class HendelselisteExceptionMapper implements FeilmeldingExceptionMapper 
     public HttpException mapFeilmeldingToHttpException(Feilmelding feilmelding, Throwable cause) {
         switch (feilmelding.getKode()) {
             case "FA-001":
-                return new MissingSekvensnummerException("fraSekvensnummer må være satt", cause);
+                return new SekvensnummerMåVæreSattException("fraSekvensnummer må være satt", cause);
             case "FA-002":
-                return new IllegalSekvensnummerException("fraSekvensnummer må være større enn 0", cause);
+                return new SekvensnummerMåVæreStørreEnnNullException("fraSekvensnummer må være større enn 0", cause);
             case "FA-003":
-                return new MissingAntallException("antall må være spesifisert", cause);
+                return new AntallMåVæreSpesifisertException("antall må være spesifisert", cause);
             case "FA-004":
-                return new IllegalAntallException("antall må være større enn 0", cause);
+                return new AntallMåVæreStørreEnnNullException("antall må være større enn 0", cause);
             case "FA-009":
-                return new DatabaseUnavailableException("Fikk ikke hentet data fra databasen, vennligst prøv igjen senere!", cause);
+                return new DatabasenErUtilgjengeligException("Fikk ikke hentet data fra databasen, vennligst prøv igjen senere!", cause);
             case "FA-010":
-                return new EmptyResultException("Fant ingen informasjon i databasen", cause);
+                return new FantIngenInformasjonException("Fant ingen informasjon i databasen", cause);
             case "FA-013":
-                return new BadRequestException("Dato har ugyldig format. Forventet YYYY-MM-DD.", cause);
+                return new UgyldigDatoformatException("Dato har ugyldig format. Forventet YYYY-MM-DD.", cause);
             case "FA-014":
-                return new NoSuchSekvensnummerException("Fant ingen sekvensnummer.", cause);
+                return new FantIngenSekvensnummerException("Fant ingen sekvensnummer.", cause);
             case "FA-015":
-                return new BadRequestException("Ugyldig dokumenttype.", cause);
+                return new UgyldigDokumenttypeException("Ugyldig dokumenttype.", cause);
         }
 
         return null;
