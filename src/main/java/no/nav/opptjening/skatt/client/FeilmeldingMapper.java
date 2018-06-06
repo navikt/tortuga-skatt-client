@@ -16,7 +16,7 @@ public class FeilmeldingMapper {
             throw new NullPointerException("Melding is null");
         }
         if (korrelasjonsId == null) {
-            throw new NullPointerException("KorrelasjonsId is null");
+            korrelasjonsId = "";
         }
         return new Feilmelding(kode, melding, korrelasjonsId);
     }
