@@ -4,6 +4,10 @@ import no.nav.opptjening.skatt.client.exceptions.InternalServerErrorException;
 
 public class DatabasenErUtilgjengeligException extends InternalServerErrorException {
 
+    public DatabasenErUtilgjengeligException(String message) {
+        this(message, null);
+    }
+
     public DatabasenErUtilgjengeligException(String message, Throwable cause) {
         super(message, cause);
     }

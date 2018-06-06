@@ -102,7 +102,7 @@ public abstract class AbstractClient<T> {
             }
             Feilmelding feilmelding = errorResponseMapper.mapErrorResponse(errorBody);
 
-            HttpException ex = exceptionMapper.mapFeilmeldingToHttpException(feilmelding, null);
+            HttpException ex = exceptionMapper.mapFeilmeldingToHttpException(feilmelding);
 
             if (ex != null) {
                 return ex;

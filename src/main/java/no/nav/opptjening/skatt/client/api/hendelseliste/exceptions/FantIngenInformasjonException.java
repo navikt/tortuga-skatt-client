@@ -4,6 +4,10 @@ import no.nav.opptjening.skatt.client.exceptions.NotFoundException;
 
 public class FantIngenInformasjonException extends NotFoundException {
 
+    public FantIngenInformasjonException(String message) {
+        this(message, null);
+    }
+
     public FantIngenInformasjonException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -4,6 +4,10 @@ import no.nav.opptjening.skatt.client.exceptions.NotFoundException;
 
 public class FantIngenSekvensnummerException extends NotFoundException {
 
+    public FantIngenSekvensnummerException(String message) {
+        this(message, null);
+    }
+
     public FantIngenSekvensnummerException(String message, Throwable cause) {
         super(message, cause);
     }

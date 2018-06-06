@@ -4,6 +4,10 @@ import no.nav.opptjening.skatt.client.exceptions.BadRequestException;
 
 public class SekvensnummerMåVæreStørreEnnNullException extends BadRequestException {
 
+    public SekvensnummerMåVæreStørreEnnNullException(String message) {
+        this(message, null);
+    }
+
     public SekvensnummerMåVæreStørreEnnNullException(String message, Throwable cause) {
         super(message, cause);
     }
