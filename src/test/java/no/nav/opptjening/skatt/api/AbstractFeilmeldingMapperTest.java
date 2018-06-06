@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class AbstractFeilmeldingMapperTest {
 
-    public void runTests(FeilmeldingMapper exceptionMapper, List<FeilmeldingTestCase> testCases) throws Exception {
+    public void runTests(FeilmeldingExceptionMapper exceptionMapper, List<FeilmeldingTestCase> testCases) throws Exception {
         for (FeilmeldingTestCase testCase : testCases) {
             HttpException exception = exceptionMapper.mapFeilmeldingToHttpException(testCase.getFeilmelding(), null);
 

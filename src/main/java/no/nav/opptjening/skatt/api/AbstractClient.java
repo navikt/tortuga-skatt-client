@@ -3,11 +3,15 @@ package no.nav.opptjening.skatt.api;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.opptjening.skatt.Feilmelding;
+import no.nav.opptjening.skatt.FeilmeldingMapper;
 import no.nav.opptjening.skatt.api.exceptions.ResponseUnmappableException;
 import no.nav.opptjening.skatt.api.exceptions.UkjentFeilkodeException;
 import no.nav.opptjening.skatt.exceptions.HttpException;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Feilmelding;
+import no.nav.opptjening.skatt.schema.hendelsesliste.FeilmeldingDto;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Call;
@@ -17,6 +21,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 
 public abstract class AbstractClient<T> {
 
@@ -26,15 +31,16 @@ public abstract class AbstractClient<T> {
 
     private HttpExceptionMapper httpExceptionMapper = new HttpExceptionMapper.BasicHttpExceptionMapper();
 
-    private SkatteetatenErrorResponseMapper errorResponseMapper;
-
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final ErrorResponseMapper errorResponseMapper;
 
     protected AbstractClient(String endepunkt, String apiKey, Class<T> api) {
         Retrofit retrofit = createRetrofit(createHttpClient(apiKey), endepunkt, JacksonConverterFactory.create(objectMapper));
 
         this.api = retrofit.create(api);
-        this.errorResponseMapper = new SkatteetatenErrorResponseMapper(objectMapper);
+
+        this.errorResponseMapper = new DefaultErrorMapper(retrofit);
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
 
@@ -57,38 +63,84 @@ public abstract class AbstractClient<T> {
         return api;
     }
 
-    abstract protected FeilmeldingMapper getExceptionMapper();
-
-    protected <S> S executeRequest(Call<S> request) throws HttpException, IOException {
-        Response<S> response;
+    @NotNull
+    protected <S, R> S executeRequest(@NotNull Call<R> request, @NotNull SuccessfulResponseMapper<R, S> responseMapper,
+                                      @NotNull FeilmeldingExceptionMapper exceptionMapper) throws HttpException, IOException {
+        Response<R> response;
         try {
             response = request.execute();
         } catch (JsonMappingException e) {
             throw new ResponseUnmappableException("Kan ikke mappe JSON-respons til den angitte klassen på grunn av skjemafeil", e);
         }
 
-        if (response.isSuccessful()) {
-            return response.body();
+        if (!response.isSuccessful()) {
+            throw handleErrorResponse(response, exceptionMapper);
         }
 
-        throw handleErrorResponse(response);
+        return handleSuccessfulResponse(response, responseMapper);
     }
 
-    private <S> HttpException handleErrorResponse(Response<S> response) {
+    @NotNull
+    private <S, R> S handleSuccessfulResponse(@NotNull Response<R> response, @NotNull SuccessfulResponseMapper<R, S> responseMapper) {
         try {
-            Feilmelding error = errorResponseMapper.mapErrorResponseToFeilmelding(response);
+            R responseBody = response.body();
+            if (responseBody == null) {
+                throw new NullPointerException("Response body is null");
+            }
+            return responseMapper.mapToResponse(responseBody);
+        } catch (Exception e) {
+            throw new ResponseUnmappableException("Kan ikke mappe til den angitte klassen på grunn av valideringsfeil", e);
+        }
+    }
 
-            HttpException ex = getExceptionMapper().mapFeilmeldingToHttpException(error, null);
+    @NotNull
+    private <S> HttpException handleErrorResponse(@NotNull Response<S> response, @NotNull FeilmeldingExceptionMapper exceptionMapper) {
+        try {
+            ResponseBody errorBody = response.errorBody();
+            if (errorBody == null) {
+                throw new NullPointerException("Error body is null");
+            }
+            Feilmelding feilmelding = errorResponseMapper.mapErrorResponse(errorBody);
+
+            HttpException ex = exceptionMapper.mapFeilmeldingToHttpException(feilmelding, null);
 
             if (ex != null) {
                 return ex;
             }
 
             return new UkjentFeilkodeException(response.code(),
-                    "Kunne ikke mappe Feilmelding=" + error.toString() + " til HttpException pga ukjent feilkode", null);
+                    "Kunne ikke mappe Feilmelding=" + feilmelding.toString() + " til HttpException pga ukjent feilkode", null);
         } catch (Exception e) {
             return httpExceptionMapper.mapResponseToHttpException(response, e);
         }
     }
 
+    public static class DefaultErrorMapper implements ErrorResponseMapper {
+        private final Retrofit retrofit;
+
+        private final FeilmeldingMapper feilmeldingMapper = new FeilmeldingMapper();
+
+        public DefaultErrorMapper(Retrofit retrofit) {
+            this.retrofit = retrofit;
+        }
+
+        @NotNull
+        @Override
+        public Feilmelding mapErrorResponse(@NotNull ResponseBody errorBody) {
+            FeilmeldingDto error = mapErrorResponseToDto(errorBody);
+            return feilmeldingMapper.mapToFeilmelding(error);
+        }
+
+        @NotNull
+        private FeilmeldingDto mapErrorResponseToDto(@NotNull ResponseBody errorResponse) {
+            try {
+                Converter<ResponseBody, FeilmeldingDto> converter = retrofit.responseBodyConverter(FeilmeldingDto.class, new Annotation[0]);
+                return converter.convert(errorResponse);
+            } catch (JsonMappingException e) {
+                throw new ResponseUnmappableException("Kan ikke mappe respons til Feilmelding på grunn av skjemafeil", e);
+            } catch (IOException e) {
+                throw new ResponseUnmappableException("Kan ikke mappe respons til Feilmelding", e);
+            }
+        }
+    }
 }

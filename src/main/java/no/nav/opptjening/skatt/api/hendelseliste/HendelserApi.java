@@ -1,7 +1,7 @@
 package no.nav.opptjening.skatt.api.hendelseliste;
 
-import no.nav.opptjening.skatt.schema.hendelsesliste.Hendelsesliste;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Sekvensnummer;
+import no.nav.opptjening.skatt.schema.hendelsesliste.HendelseslisteDto;
+import no.nav.opptjening.skatt.schema.hendelsesliste.SekvensnummerDto;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -11,11 +11,12 @@ import java.time.LocalDate;
 public interface HendelserApi {
 
     @GET("hendelser/start")
-    Call<Sekvensnummer> sekvensnummerEtter(@Query("dato") LocalDate dato);
+    Call<SekvensnummerDto> forsteSekvensnummerEtter(@Query("dato") LocalDate dato);
 
     @GET("hendelser/start")
-    Call<Sekvensnummer> forsteSekvens();
+    Call<SekvensnummerDto> forsteSekvensnummer();
 
     @GET("hendelser/")
-    Call<Hendelsesliste> getHendelser(@Query("fraSekvensnummer") long fraSekvens, @Query("antall") int antall);
+    Call<HendelseslisteDto> getHendelser(@Query("fraSekvensnummer") long fraSekvensnummer, @Query("antall") int antall);
 }
+

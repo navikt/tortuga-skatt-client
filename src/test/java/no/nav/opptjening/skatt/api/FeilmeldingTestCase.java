@@ -1,7 +1,7 @@
 package no.nav.opptjening.skatt.api;
 
+import no.nav.opptjening.skatt.Feilmelding;
 import no.nav.opptjening.skatt.exceptions.HttpException;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Feilmelding;
 
 public class FeilmeldingTestCase {
     private final String feilkode;

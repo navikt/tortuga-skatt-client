@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class BeregnetSkattTest {
+public class BeregnetSkattDtoTest {
 
     @Test
     public void that_Mapping_Works_With_Default_Values() throws Exception {
@@ -14,7 +14,7 @@ public class BeregnetSkattTest {
                 "    \"inntektsaar\": \"2016\"\n" +
                 "}\n";
 
-        BeregnetSkatt beregnetSkatt = mapper.readValue(jsonString, BeregnetSkatt.class);
+        BeregnetSkattDto beregnetSkatt = mapper.readValue(jsonString, BeregnetSkattDto.class);
         Assert.assertEquals("12345678901", beregnetSkatt.getPersonidentifikator());
         Assert.assertEquals("2016", beregnetSkatt.getInntektsaar());
         Assert.assertEquals(0, beregnetSkatt.getPersoninntektLoenn());
@@ -40,7 +40,7 @@ public class BeregnetSkattTest {
                 "    \"skjermet\": false\n" +
                 "}\n";
 
-        BeregnetSkatt beregnetSkatt = mapper.readValue(jsonString, BeregnetSkatt.class);
+        BeregnetSkattDto beregnetSkatt = mapper.readValue(jsonString, BeregnetSkattDto.class);
         Assert.assertEquals("12345678901", beregnetSkatt.getPersonidentifikator());
         Assert.assertEquals("2016", beregnetSkatt.getInntektsaar());
         Assert.assertEquals(490000, beregnetSkatt.getPersoninntektLoenn());

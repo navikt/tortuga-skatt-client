@@ -3,14 +3,13 @@ package no.nav.opptjening.skatt.api.hendelseliste;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import no.nav.opptjening.skatt.api.exceptions.ResponseUnmappableException;
+import no.nav.opptjening.skatt.Hendelsesliste;
+import no.nav.opptjening.skatt.Sekvensnummer;
 import no.nav.opptjening.skatt.api.exceptions.UkjentFeilkodeException;
 import no.nav.opptjening.skatt.api.hendelseliste.exceptions.MissingSekvensnummerException;
 import no.nav.opptjening.skatt.api.skatteoppgjoer.SkatteoppgjoerhendelserClient;
 import no.nav.opptjening.skatt.exceptions.ClientException;
 import no.nav.opptjening.skatt.exceptions.ServerException;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Hendelsesliste;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Sekvensnummer;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,7 +43,7 @@ public class HendelserClientTest {
                 .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
                 .willReturn(WireMock.okJson(jsonBody)));
 
-        Sekvensnummer result = hendelserClient.forsteSekvens();
+        Sekvensnummer result = hendelserClient.forsteSekvensnummer();
 
         Assert.assertEquals(10, (long)result.getSekvensnummer());
     }
@@ -59,27 +58,9 @@ public class HendelserClientTest {
                 .willReturn(WireMock.okJson(jsonBody)));
 
         LocalDate date = LocalDate.of(2017, 1, 1);
-        Sekvensnummer result = hendelserClient.forsteSekvensEtter(date);
+        Sekvensnummer result = hendelserClient.forsteSekvensnummerEtter(date);
 
         Assert.assertEquals(10, (long)result.getSekvensnummer());
-    }
-
-    @Test
-    public void when_NextSekvensnummerAfterDateResponseIsUnexpectedFormat_Then_ThrowResponseUnmappableException() throws Exception {
-        String jsonBody = "{\"sekvens\": 10}";
-
-        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/start"))
-                .withQueryParam("dato", WireMock.equalTo("2017-01-01"))
-                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
-                .willReturn(WireMock.okJson(jsonBody)));
-
-        try {
-            LocalDate date = LocalDate.of(2017, 1, 1);
-            hendelserClient.forsteSekvensEtter(date);
-            fail("Expected an ResponseUnmappableException to be thrown");
-        } catch (ResponseUnmappableException e) {
-            // ok
-        }
     }
 
     @Test
@@ -93,7 +74,7 @@ public class HendelserClientTest {
 
         try {
             LocalDate date = LocalDate.of(2017, 1, 1);
-            hendelserClient.forsteSekvensEtter(date);
+            hendelserClient.forsteSekvensnummerEtter(date);
             fail("Expected an ClientException to be thrown");
         } catch (ClientException e) {
             // ok
@@ -108,7 +89,7 @@ public class HendelserClientTest {
         mockHendelser.add(new HendelseDto(10, "12345", "2016"));
         mockHendelser.add(new HendelseDto(11, "67891", "2017"));
 
-        response.put("hendelse", mockHendelser);
+        response.put("hendelser", mockHendelser);
 
         String jsonBody = new ObjectMapper().writeValueAsString(response);
 
@@ -145,28 +126,12 @@ public class HendelserClientTest {
     }
 
     @Test
-    public void when_HendelserResponseIsUnexpectedFormat_Then_ThrowResponseUnmappableException() throws Exception {
-        WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/"))
-                .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
-                .withQueryParam("antall", WireMock.equalTo("1000"))
-                .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
-                .willReturn(WireMock.okJson("{\"foo\": \"bar\"}")));
-
-        try {
-            hendelserClient.getHendelser(10, 1000);
-            fail("Expected an ResponseUnmappableException to be thrown");
-        } catch (ResponseUnmappableException e) {
-            // ok
-        }
-    }
-
-    @Test
     public void when_fraSekvensnummerIsNotSet_Then_ThrowMissingSekvensnummerException() throws Exception {
         WireMock.stubFor(WireMock.get(WireMock.urlPathEqualTo("/hendelser/"))
                 .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
                 .withQueryParam("antall", WireMock.equalTo("1000"))
                 .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
-                .willReturn(WireMock.badRequest().withHeader("Content-type", "application/json").withBody("{\"kode\": \"FA-001\", \"melding\": \"fraSekvensnummer må være satt\"}")));
+                .willReturn(WireMock.badRequest().withHeader("Content-type", "application/json").withBody("{\"kode\": \"FA-001\", \"melding\": \"fraSekvensnummer må være satt\", \"korrelasjonsId\": \"foobar\"}")));
 
         try {
             hendelserClient.getHendelser(10, 1000);
@@ -182,7 +147,7 @@ public class HendelserClientTest {
                 .withQueryParam("fraSekvensnummer", WireMock.equalTo("10"))
                 .withQueryParam("antall", WireMock.equalTo("1000"))
                 .withHeader("X-Nav-Apikey", WireMock.equalTo("apikey"))
-                .willReturn(WireMock.badRequest().withHeader("Content-type", "application/json").withBody("{\"kode\": \"ZZ-001\", \"melding\": \"Denne feilkoden er ikke implementert\"}")));
+                .willReturn(WireMock.badRequest().withHeader("Content-type", "application/json").withBody("{\"kode\": \"ZZ-001\", \"melding\": \"Denne feilkoden er ikke implementert\", \"korrelasjonsId\": \"foobar\"}")));
 
         try {
             hendelserClient.getHendelser(10, 1000);

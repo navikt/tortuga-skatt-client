@@ -1,12 +1,12 @@
 package no.nav.opptjening.skatt.api.hendelseliste;
 
-import no.nav.opptjening.skatt.api.FeilmeldingMapper;
+import no.nav.opptjening.skatt.Feilmelding;
+import no.nav.opptjening.skatt.api.FeilmeldingExceptionMapper;
 import no.nav.opptjening.skatt.api.hendelseliste.exceptions.*;
-import no.nav.opptjening.skatt.exceptions.HttpException;
 import no.nav.opptjening.skatt.exceptions.BadRequestException;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Feilmelding;
+import no.nav.opptjening.skatt.exceptions.HttpException;
 
-public class HendelselisteExceptionMapper implements FeilmeldingMapper {
+public class HendelselisteExceptionMapper implements FeilmeldingExceptionMapper {
     public HttpException mapFeilmeldingToHttpException(Feilmelding feilmelding, Throwable cause) {
         switch (feilmelding.getKode()) {
             case "FA-001":

@@ -1,9 +1,10 @@
 package no.nav.opptjening.skatt.schema;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.jetbrains.annotations.Nullable;
 
-@JsonDeserialize(builder = BeregnetSkatt.Builder.class)
-public final class BeregnetSkatt {
+@JsonDeserialize(builder = BeregnetSkattDto.Builder.class)
+public final class BeregnetSkattDto {
 
     private final String personidentifikator;
     private final String inntektsaar;
@@ -15,7 +16,7 @@ public final class BeregnetSkatt {
     private final long svalbardPersoninntektNaering;
     private final boolean skjermet;
 
-    public BeregnetSkatt(String personidentifikator, String inntektsaar, long personinntektLoenn, long personinntektFiskeFangstFamiliebarnehage, long personinntektNaering, long personinntektBarePensjonsdel, long svalbardLoennLoennstrekkordningen, long svalbardPersoninntektNaering, boolean skjermet) {
+    public BeregnetSkattDto(@Nullable String personidentifikator, @Nullable String inntektsaar, long personinntektLoenn, long personinntektFiskeFangstFamiliebarnehage, long personinntektNaering, long personinntektBarePensjonsdel, long svalbardLoennLoennstrekkordningen, long svalbardPersoninntektNaering, boolean skjermet) {
         this.personidentifikator = personidentifikator;
         this.inntektsaar = inntektsaar;
         this.personinntektLoenn = personinntektLoenn;
@@ -27,10 +28,12 @@ public final class BeregnetSkatt {
         this.skjermet = skjermet;
     }
 
+    @Nullable
     public String getPersonidentifikator() {
         return personidentifikator;
     }
 
+    @Nullable
     public String getInntektsaar() {
         return inntektsaar;
     }
@@ -141,8 +144,8 @@ public final class BeregnetSkatt {
             return this;
         }
 
-        public BeregnetSkatt build() {
-            return new BeregnetSkatt(personidentifikator, inntektsaar, personinntektLoenn, personinntektFiskeFangstFamiliebarnehage, personinntektNaering, personinntektBarePensjonsdel, svalbardLoennLoennstrekkordningen, svalbardPersoninntektNaering, skjermet);
+        public BeregnetSkattDto build() {
+            return new BeregnetSkattDto(personidentifikator, inntektsaar, personinntektLoenn, personinntektFiskeFangstFamiliebarnehage, personinntektNaering, personinntektBarePensjonsdel, svalbardLoennLoennstrekkordningen, svalbardPersoninntektNaering, skjermet);
         }
     }
 }

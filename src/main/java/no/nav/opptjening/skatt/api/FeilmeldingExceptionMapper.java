@@ -1,8 +1,10 @@
 package no.nav.opptjening.skatt.api;
 
+import no.nav.opptjening.skatt.Feilmelding;
 import no.nav.opptjening.skatt.exceptions.HttpException;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Feilmelding;
+import org.jetbrains.annotations.Nullable;
 
-public interface FeilmeldingMapper {
+public interface FeilmeldingExceptionMapper {
+    @Nullable
     HttpException mapFeilmeldingToHttpException(Feilmelding feilmelding, Throwable cause);
 }

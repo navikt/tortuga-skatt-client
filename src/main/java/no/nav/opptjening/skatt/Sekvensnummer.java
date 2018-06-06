@@ -1,14 +1,12 @@
-package no.nav.opptjening.skatt.schema.hendelsesliste;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+package no.nav.opptjening.skatt;
 
 public final class Sekvensnummer {
     private final long sekvensnummer;
 
-    @JsonCreator
-    public Sekvensnummer(@JsonProperty("sekvensnummer") long sekvensnummer) {
-
+    public Sekvensnummer(long sekvensnummer) {
+        if (sekvensnummer < 1) {
+            throw new IllegalArgumentException("sekvensnummer must be greater than 0");
+        }
         this.sekvensnummer = sekvensnummer;
     }
 

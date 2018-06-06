@@ -1,9 +1,13 @@
 package no.nav.opptjening.skatt.api.hendelseliste;
 
+import no.nav.opptjening.skatt.Hendelsesliste;
+import no.nav.opptjening.skatt.HendelseslisteMapper;
+import no.nav.opptjening.skatt.Sekvensnummer;
+import no.nav.opptjening.skatt.SekvensnummerMapper;
 import no.nav.opptjening.skatt.api.AbstractClient;
-import no.nav.opptjening.skatt.api.FeilmeldingMapper;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Hendelsesliste;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Sekvensnummer;
+import no.nav.opptjening.skatt.schema.hendelsesliste.HendelseslisteDto;
+import no.nav.opptjening.skatt.schema.hendelsesliste.SekvensnummerDto;
+import org.jetbrains.annotations.NotNull;
 import retrofit2.Call;
 
 import java.io.IOException;
@@ -15,23 +19,20 @@ public abstract class HendelserClient extends AbstractClient<HendelserApi> {
         super(endepunkt, apiKey, HendelserApi.class);
     }
 
-    public Sekvensnummer forsteSekvensEtter(LocalDate dato) throws IOException {
-        Call<Sekvensnummer> request = getApi().sekvensnummerEtter(dato);
-        return executeRequest(request);
+    @NotNull
+    public Sekvensnummer forsteSekvensnummerEtter(@NotNull LocalDate dato) throws IOException {
+        Call<SekvensnummerDto> request = getApi().forsteSekvensnummerEtter(dato);
+        return executeRequest(request, response -> new SekvensnummerMapper().mapToSekvensnummer(response), new HendelselisteExceptionMapper());
     }
 
-    public Sekvensnummer forsteSekvens() throws IOException {
-        Call<Sekvensnummer> request = getApi().forsteSekvens();
-        return executeRequest(request);
+    @NotNull
+    public Sekvensnummer forsteSekvensnummer() throws IOException {
+        Call<SekvensnummerDto> request = getApi().forsteSekvensnummer();
+        return executeRequest(request, response -> new SekvensnummerMapper().mapToSekvensnummer(response), new HendelselisteExceptionMapper());
     }
 
-    public Hendelsesliste getHendelser(long fraSekvens, int antall) throws IOException {
-        Call<Hendelsesliste> request = getApi().getHendelser(fraSekvens, antall);
-        return executeRequest(request);
-    }
-
-    @Override
-    protected FeilmeldingMapper getExceptionMapper() {
-        return new HendelselisteExceptionMapper();
+    public Hendelsesliste getHendelser(long fraSekvensnummer, int antall) throws IOException {
+        Call<HendelseslisteDto> request = getApi().getHendelser(fraSekvensnummer, antall);
+        return executeRequest(request, response -> new HendelseslisteMapper().mapToHendelsesliste(response), new HendelselisteExceptionMapper());
     }
 }

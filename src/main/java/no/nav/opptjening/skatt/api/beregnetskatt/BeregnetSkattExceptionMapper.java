@@ -1,12 +1,12 @@
 package no.nav.opptjening.skatt.api.beregnetskatt;
 
-import no.nav.opptjening.skatt.api.FeilmeldingMapper;
-import no.nav.opptjening.skatt.exceptions.HttpException;
+import no.nav.opptjening.skatt.Feilmelding;
+import no.nav.opptjening.skatt.api.FeilmeldingExceptionMapper;
 import no.nav.opptjening.skatt.exceptions.BadRequestException;
+import no.nav.opptjening.skatt.exceptions.HttpException;
 import no.nav.opptjening.skatt.exceptions.NotFoundException;
-import no.nav.opptjening.skatt.schema.hendelsesliste.Feilmelding;
 
-public class BeregnetSkattExceptionMapper implements FeilmeldingMapper {
+public class BeregnetSkattExceptionMapper implements FeilmeldingExceptionMapper {
     public HttpException mapFeilmeldingToHttpException(Feilmelding feilmelding, Throwable cause) {
         switch (feilmelding.getKode()) {
             case "BSA-005":
