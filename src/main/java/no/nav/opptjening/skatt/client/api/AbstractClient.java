@@ -1,7 +1,6 @@
 package no.nav.opptjening.skatt.client.api;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.opptjening.skatt.client.Feilmelding;
 import no.nav.opptjening.skatt.client.FeilmeldingMapper;
@@ -69,7 +68,7 @@ public abstract class AbstractClient<T> {
         Response<R> response;
         try {
             response = request.execute();
-        } catch (JsonMappingException e) {
+        } catch (ResponseBodyConverterException e) {
             throw new ResponseUnmappableException("Kan ikke mappe JSON-respons til den angitte klassen på grunn av skjemafeil", e);
         }
 
@@ -136,7 +135,7 @@ public abstract class AbstractClient<T> {
             try {
                 Converter<ResponseBody, FeilmeldingDto> converter = retrofit.responseBodyConverter(FeilmeldingDto.class, new Annotation[0]);
                 return converter.convert(errorResponse);
-            } catch (JsonMappingException e) {
+            } catch (ResponseBodyConverterException e) {
                 throw new ResponseUnmappableException("Kan ikke mappe respons til Feilmelding på grunn av skjemafeil", e);
             } catch (IOException e) {
                 throw new ResponseUnmappableException("Kan ikke mappe respons til Feilmelding", e);
