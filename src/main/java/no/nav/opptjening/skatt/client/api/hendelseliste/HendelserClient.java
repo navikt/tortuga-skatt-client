@@ -15,7 +15,7 @@ import java.time.LocalDate;
 
 public abstract class HendelserClient extends AbstractClient<HendelserApi> {
 
-    public HendelserClient(String endepunkt, String apiKey) {
+    public HendelserClient(@NotNull String endepunkt, @NotNull String apiKey) {
         super(endepunkt, apiKey, HendelserApi.class);
     }
 
