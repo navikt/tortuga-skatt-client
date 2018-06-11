@@ -1,5 +1,7 @@
 package no.nav.opptjening.skatt.client;
 
+import java.util.Objects;
+
 public final class Sekvensnummer {
     private final long sekvensnummer;
 
@@ -12,6 +14,19 @@ public final class Sekvensnummer {
 
     public long getSekvensnummer() {
         return sekvensnummer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sekvensnummer that = (Sekvensnummer) o;
+        return sekvensnummer == that.sekvensnummer;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sekvensnummer);
     }
 
     @Override

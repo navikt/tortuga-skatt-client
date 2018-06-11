@@ -3,6 +3,7 @@ package no.nav.opptjening.skatt.client;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class Hendelsesliste {
     private final List<Hendelse> hendelser;
@@ -35,6 +36,21 @@ public final class Hendelsesliste {
             this.sekvensnummer = sekvensnummer;
             this.identifikator = identifikator;
             this.gjelderPeriode = gjelderPeriode;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Hendelse hendelse = (Hendelse) o;
+            return sekvensnummer == hendelse.sekvensnummer &&
+                    Objects.equals(identifikator, hendelse.identifikator) &&
+                    Objects.equals(gjelderPeriode, hendelse.gjelderPeriode);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(sekvensnummer, identifikator, gjelderPeriode);
         }
 
         public long getSekvensnummer() {

@@ -2,6 +2,8 @@ package no.nav.opptjening.skatt.client;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public final class BeregnetSkatt {
 
     private final String personidentifikator;
@@ -62,6 +64,29 @@ public final class BeregnetSkatt {
 
     public boolean isSkjermet() {
         return skjermet;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BeregnetSkatt that = (BeregnetSkatt) o;
+        return personinntektLoenn == that.personinntektLoenn &&
+                personinntektFiskeFangstFamiliebarnehage == that.personinntektFiskeFangstFamiliebarnehage &&
+                personinntektNaering == that.personinntektNaering &&
+                personinntektBarePensjonsdel == that.personinntektBarePensjonsdel &&
+                svalbardLoennLoennstrekkordningen == that.svalbardLoennLoennstrekkordningen &&
+                svalbardPersoninntektNaering == that.svalbardPersoninntektNaering &&
+                skjermet == that.skjermet &&
+                Objects.equals(personidentifikator, that.personidentifikator) &&
+                Objects.equals(inntektsaar, that.inntektsaar);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(personidentifikator, inntektsaar, personinntektLoenn,
+                personinntektFiskeFangstFamiliebarnehage, personinntektNaering, personinntektBarePensjonsdel,
+                svalbardLoennLoennstrekkordningen, svalbardPersoninntektNaering, skjermet);
     }
 
     @Override

@@ -2,6 +2,8 @@ package no.nav.opptjening.skatt.client;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public final class Feilmelding {
     private final String kode;
     private final String melding;
@@ -11,6 +13,21 @@ public final class Feilmelding {
         this.kode = kode;
         this.melding = melding;
         this.korrelasjonsId = korrelasjonsId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Feilmelding that = (Feilmelding) o;
+        return Objects.equals(kode, that.kode) &&
+                Objects.equals(melding, that.melding) &&
+                Objects.equals(korrelasjonsId, that.korrelasjonsId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(kode, melding, korrelasjonsId);
     }
 
     @NotNull
