@@ -44,7 +44,7 @@ public abstract class AbstractClient<T> {
 
     private static OkHttpClient createHttpClient(String apiKey) {
         return new OkHttpClient.Builder()
-                .addNetworkInterceptor(new HttpRequestLogger())
+                .addNetworkInterceptor(new HttpRequestLogger("X-NAV-APIKEY"))
                 .addNetworkInterceptor(new HttpResponseLogger())
                 .addInterceptor(new HeaderInterceptor("X-NAV-APIKEY", apiKey))
                 .build();
