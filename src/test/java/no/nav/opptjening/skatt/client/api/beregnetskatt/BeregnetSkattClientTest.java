@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 public class BeregnetSkattClientTest {
@@ -44,14 +46,14 @@ public class BeregnetSkattClientTest {
 
         BeregnetSkatt result = beregnetSkattClient.getBeregnetSkatt("nav","2016", "12345678901");
 
-        Assert.assertEquals("12345678901", result.getPersonidentifikator());
-        Assert.assertEquals("2016", result.getInntektsaar());
-        Assert.assertEquals(490000, result.getPersoninntektLoenn(), 0);
-        Assert.assertEquals(90000, result.getPersoninntektFiskeFangstFamiliebarnehage(), 0);
-        Assert.assertEquals(70000, result.getPersoninntektNaering(), 0);
-        Assert.assertEquals(40000, result.getPersoninntektBarePensjonsdel(), 0);
-        Assert.assertEquals(123456, result.getSvalbardLoennLoennstrekkordningen(), 0);
-        Assert.assertEquals(123456, result.getSvalbardPersoninntektNaering(), 0);
+        assertEquals("12345678901", result.getPersonidentifikator());
+        assertEquals("2016", result.getInntektsaar());
+        assertEquals(490000, result.getPersoninntektLoenn(), 0);
+        assertEquals(90000, result.getPersoninntektFiskeFangstFamiliebarnehage(), 0);
+        assertEquals(70000, result.getPersoninntektNaering(), 0);
+        assertEquals(40000, result.getPersoninntektBarePensjonsdel(), 0);
+        assertEquals(123456, result.getSvalbardLoennLoennstrekkordningen(), 0);
+        assertEquals(123456, result.getSvalbardPersoninntektNaering(), 0);
     }
 
     @Test
@@ -68,14 +70,14 @@ public class BeregnetSkattClientTest {
 
         BeregnetSkatt result = beregnetSkattClient.getBeregnetSkatt("nav","2016", "12345678901");
 
-        Assert.assertEquals("12345678901", result.getPersonidentifikator());
-        Assert.assertEquals("2016", result.getInntektsaar());
-        Assert.assertEquals(490000, result.getPersoninntektLoenn(), 0);
-        Assert.assertEquals(0, result.getPersoninntektFiskeFangstFamiliebarnehage(), 0);
-        Assert.assertEquals(0, result.getPersoninntektNaering(), 0);
-        Assert.assertEquals(0, result.getPersoninntektBarePensjonsdel(), 0);
-        Assert.assertEquals(0, result.getSvalbardLoennLoennstrekkordningen(), 0);
-        Assert.assertEquals(0, result.getSvalbardPersoninntektNaering(), 0);
+        assertEquals("12345678901", result.getPersonidentifikator());
+        assertEquals("2016", result.getInntektsaar());
+        assertEquals(490000, result.getPersoninntektLoenn(), 0);
+        assertNull(result.getPersoninntektFiskeFangstFamiliebarnehage());
+        assertNull(result.getPersoninntektNaering());
+        assertNull(result.getPersoninntektBarePensjonsdel());
+        assertNull(result.getSvalbardLoennLoennstrekkordningen());
+        assertNull(result.getSvalbardPersoninntektNaering());
     }
 
     @Test
@@ -122,14 +124,14 @@ public class BeregnetSkattClientTest {
 
         BeregnetSkatt result = beregnetSkattClient.getBeregnetSkatt("nav","2016", "12345678901");
 
-        Assert.assertEquals("12345678901", result.getPersonidentifikator());
-        Assert.assertEquals("2016", result.getInntektsaar());
-        Assert.assertEquals(490000, result.getPersoninntektLoenn(), 0);
-        Assert.assertEquals(90000, result.getPersoninntektFiskeFangstFamiliebarnehage(), 0);
-        Assert.assertEquals(70000, result.getPersoninntektNaering(), 0);
-        Assert.assertEquals(40000, result.getPersoninntektBarePensjonsdel(), 0);
-        Assert.assertEquals(123456, result.getSvalbardLoennLoennstrekkordningen(), 0);
-        Assert.assertEquals(123456, result.getSvalbardPersoninntektNaering(), 0);
+        assertEquals("12345678901", result.getPersonidentifikator());
+        assertEquals("2016", result.getInntektsaar());
+        assertEquals(490000, result.getPersoninntektLoenn(), 0);
+        assertEquals(90000, result.getPersoninntektFiskeFangstFamiliebarnehage(), 0);
+        assertEquals(70000, result.getPersoninntektNaering(), 0);
+        assertEquals(40000, result.getPersoninntektBarePensjonsdel(), 0);
+        assertEquals(123456, result.getSvalbardLoennLoennstrekkordningen(), 0);
+        assertEquals(123456, result.getSvalbardPersoninntektNaering(), 0);
     }
 
     @Test

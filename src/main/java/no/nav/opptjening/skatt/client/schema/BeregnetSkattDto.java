@@ -8,15 +8,15 @@ public final class BeregnetSkattDto {
 
     private final String personidentifikator;
     private final String inntektsaar;
-    private final long personinntektLoenn;
-    private final long personinntektFiskeFangstFamiliebarnehage;
-    private final long personinntektNaering;
-    private final long personinntektBarePensjonsdel;
-    private final long svalbardLoennLoennstrekkordningen;
-    private final long svalbardPersoninntektNaering;
+    private final Long personinntektLoenn;
+    private final Long personinntektFiskeFangstFamiliebarnehage;
+    private final Long personinntektNaering;
+    private final Long personinntektBarePensjonsdel;
+    private final Long svalbardLoennLoennstrekkordningen;
+    private final Long svalbardPersoninntektNaering;
     private final boolean skjermet;
 
-    public BeregnetSkattDto(@Nullable String personidentifikator, @Nullable String inntektsaar, long personinntektLoenn, long personinntektFiskeFangstFamiliebarnehage, long personinntektNaering, long personinntektBarePensjonsdel, long svalbardLoennLoennstrekkordningen, long svalbardPersoninntektNaering, boolean skjermet) {
+    public BeregnetSkattDto(@Nullable String personidentifikator, @Nullable String inntektsaar, Long personinntektLoenn, Long personinntektFiskeFangstFamiliebarnehage, Long personinntektNaering, Long personinntektBarePensjonsdel, Long svalbardLoennLoennstrekkordningen, Long svalbardPersoninntektNaering, boolean skjermet) {
         this.personidentifikator = personidentifikator;
         this.inntektsaar = inntektsaar;
         this.personinntektLoenn = personinntektLoenn;
@@ -38,27 +38,27 @@ public final class BeregnetSkattDto {
         return inntektsaar;
     }
 
-    public long getPersoninntektLoenn() {
+    public Long getPersoninntektLoenn() {
         return personinntektLoenn;
     }
 
-    public long getPersoninntektFiskeFangstFamiliebarnehage() {
+    public Long getPersoninntektFiskeFangstFamiliebarnehage() {
         return personinntektFiskeFangstFamiliebarnehage;
     }
 
-    public long getPersoninntektNaering() {
+    public Long getPersoninntektNaering() {
         return personinntektNaering;
     }
 
-    public long getPersoninntektBarePensjonsdel() {
+    public Long getPersoninntektBarePensjonsdel() {
         return personinntektBarePensjonsdel;
     }
 
-    public long getSvalbardLoennLoennstrekkordningen() {
+    public Long getSvalbardLoennLoennstrekkordningen() {
         return svalbardLoennLoennstrekkordningen;
     }
 
-    public long getSvalbardPersoninntektNaering() {
+    public Long getSvalbardPersoninntektNaering() {
         return svalbardPersoninntektNaering;
     }
 
@@ -88,12 +88,12 @@ public final class BeregnetSkattDto {
     public static final class Builder {
         private String personidentifikator;
         private String inntektsaar;
-        private long personinntektLoenn;
-        private long personinntektFiskeFangstFamiliebarnehage;
-        private long personinntektNaering;
-        private long personinntektBarePensjonsdel;
-        private long svalbardLoennLoennstrekkordningen;
-        private long svalbardPersoninntektNaering;
+        private Long personinntektLoenn;
+        private Long personinntektFiskeFangstFamiliebarnehage;
+        private Long personinntektNaering;
+        private Long personinntektBarePensjonsdel;
+        private Long svalbardLoennLoennstrekkordningen;
+        private Long svalbardPersoninntektNaering;
         private boolean skjermet;
 
         private Builder() {
@@ -109,32 +109,32 @@ public final class BeregnetSkattDto {
             return this;
         }
 
-        public Builder withPersoninntektLoenn(long personinntektLoenn) {
+        public Builder withPersoninntektLoenn(Long personinntektLoenn) {
             this.personinntektLoenn = personinntektLoenn;
             return this;
         }
 
-        public Builder withPersoninntektFiskeFangstFamiliebarnehage(long personinntektFiskeFangstFamiliebarnehage) {
+        public Builder withPersoninntektFiskeFangstFamiliebarnehage(Long personinntektFiskeFangstFamiliebarnehage) {
             this.personinntektFiskeFangstFamiliebarnehage = personinntektFiskeFangstFamiliebarnehage;
             return this;
         }
 
-        public Builder withPersoninntektNaering(long personinntektNaering) {
+        public Builder withPersoninntektNaering(Long personinntektNaering) {
             this.personinntektNaering = personinntektNaering;
             return this;
         }
 
-        public Builder withPersoninntektBarePensjonsdel(long personinntektBarePensjonsdel) {
+        public Builder withPersoninntektBarePensjonsdel(Long personinntektBarePensjonsdel) {
             this.personinntektBarePensjonsdel = personinntektBarePensjonsdel;
             return this;
         }
 
-        public Builder withSvalbardLoennLoennstrekkordningen(long svalbardLoennLoennstrekkordningen) {
+        public Builder withSvalbardLoennLoennstrekkordningen(Long svalbardLoennLoennstrekkordningen) {
             this.svalbardLoennLoennstrekkordningen = svalbardLoennLoennstrekkordningen;
             return this;
         }
 
-        public Builder withSvalbardPersoninntektNaering(long svalbardPersoninntektNaering) {
+        public Builder withSvalbardPersoninntektNaering(Long svalbardPersoninntektNaering) {
             this.svalbardPersoninntektNaering = svalbardPersoninntektNaering;
             return this;
         }

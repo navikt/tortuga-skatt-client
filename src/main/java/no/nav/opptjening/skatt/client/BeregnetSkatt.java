@@ -8,15 +8,15 @@ public final class BeregnetSkatt {
 
     private final String personidentifikator;
     private final String inntektsaar;
-    private final long personinntektLoenn;
-    private final long personinntektFiskeFangstFamiliebarnehage;
-    private final long personinntektNaering;
-    private final long personinntektBarePensjonsdel;
-    private final long svalbardLoennLoennstrekkordningen;
-    private final long svalbardPersoninntektNaering;
+    private final Long personinntektLoenn;
+    private final Long personinntektFiskeFangstFamiliebarnehage;
+    private final Long personinntektNaering;
+    private final Long personinntektBarePensjonsdel;
+    private final Long svalbardLoennLoennstrekkordningen;
+    private final Long svalbardPersoninntektNaering;
     private final boolean skjermet;
 
-    public BeregnetSkatt(@NotNull String personidentifikator, @NotNull String inntektsaar, long personinntektLoenn, long personinntektFiskeFangstFamiliebarnehage, long personinntektNaering, long personinntektBarePensjonsdel, long svalbardLoennLoennstrekkordningen, long svalbardPersoninntektNaering, boolean skjermet) {
+    public BeregnetSkatt(@NotNull String personidentifikator, @NotNull String inntektsaar, Long personinntektLoenn, Long personinntektFiskeFangstFamiliebarnehage, Long personinntektNaering, Long personinntektBarePensjonsdel, Long svalbardLoennLoennstrekkordningen, Long svalbardPersoninntektNaering, boolean skjermet) {
         this.personidentifikator = personidentifikator;
         this.inntektsaar = inntektsaar;
         this.personinntektLoenn = personinntektLoenn;
@@ -38,27 +38,27 @@ public final class BeregnetSkatt {
         return inntektsaar;
     }
 
-    public long getPersoninntektLoenn() {
+    public Long getPersoninntektLoenn() {
         return personinntektLoenn;
     }
 
-    public long getPersoninntektFiskeFangstFamiliebarnehage() {
+    public Long getPersoninntektFiskeFangstFamiliebarnehage() {
         return personinntektFiskeFangstFamiliebarnehage;
     }
 
-    public long getPersoninntektNaering() {
+    public Long getPersoninntektNaering() {
         return personinntektNaering;
     }
 
-    public long getPersoninntektBarePensjonsdel() {
+    public Long getPersoninntektBarePensjonsdel() {
         return personinntektBarePensjonsdel;
     }
 
-    public long getSvalbardLoennLoennstrekkordningen() {
+    public Long getSvalbardLoennLoennstrekkordningen() {
         return svalbardLoennLoennstrekkordningen;
     }
 
-    public long getSvalbardPersoninntektNaering() {
+    public Long getSvalbardPersoninntektNaering() {
         return svalbardPersoninntektNaering;
     }
 
