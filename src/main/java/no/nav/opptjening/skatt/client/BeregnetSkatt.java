@@ -1,8 +1,11 @@
 package no.nav.opptjening.skatt.client;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 public final class BeregnetSkatt {
 
@@ -16,7 +19,11 @@ public final class BeregnetSkatt {
     private final Long svalbardPersoninntektNaering;
     private final boolean skjermet;
 
-    public BeregnetSkatt(@NotNull String personidentifikator, @NotNull String inntektsaar, Long personinntektLoenn, Long personinntektFiskeFangstFamiliebarnehage, Long personinntektNaering, Long personinntektBarePensjonsdel, Long svalbardLoennLoennstrekkordningen, Long svalbardPersoninntektNaering, boolean skjermet) {
+    public BeregnetSkatt(@NotNull String personidentifikator, @NotNull String inntektsaar,
+                         @Nullable Long personinntektLoenn, @Nullable Long personinntektFiskeFangstFamiliebarnehage,
+                         @Nullable Long personinntektNaering, @Nullable Long personinntektBarePensjonsdel,
+                         @Nullable Long svalbardLoennLoennstrekkordningen, @Nullable  Long svalbardPersoninntektNaering,
+                         boolean skjermet) {
         this.personidentifikator = personidentifikator;
         this.inntektsaar = inntektsaar;
         this.personinntektLoenn = personinntektLoenn;
@@ -38,28 +45,28 @@ public final class BeregnetSkatt {
         return inntektsaar;
     }
 
-    public Long getPersoninntektLoenn() {
-        return personinntektLoenn;
+    public Optional<Long> getPersoninntektLoenn() {
+        return Optional.ofNullable(personinntektLoenn);
     }
 
-    public Long getPersoninntektFiskeFangstFamiliebarnehage() {
-        return personinntektFiskeFangstFamiliebarnehage;
+    public Optional<Long> getPersoninntektFiskeFangstFamiliebarnehage() {
+        return Optional.ofNullable(personinntektFiskeFangstFamiliebarnehage);
     }
 
-    public Long getPersoninntektNaering() {
-        return personinntektNaering;
+    public Optional<Long> getPersoninntektNaering() {
+        return Optional.ofNullable(personinntektNaering);
     }
 
-    public Long getPersoninntektBarePensjonsdel() {
-        return personinntektBarePensjonsdel;
+    public Optional<Long> getPersoninntektBarePensjonsdel() {
+        return Optional.ofNullable(personinntektBarePensjonsdel);
     }
 
-    public Long getSvalbardLoennLoennstrekkordningen() {
-        return svalbardLoennLoennstrekkordningen;
+    public Optional<Long> getSvalbardLoennLoennstrekkordningen() {
+        return Optional.ofNullable(svalbardLoennLoennstrekkordningen);
     }
 
-    public Long getSvalbardPersoninntektNaering() {
-        return svalbardPersoninntektNaering;
+    public Optional<Long> getSvalbardPersoninntektNaering() {
+        return Optional.ofNullable(svalbardPersoninntektNaering);
     }
 
     public boolean isSkjermet() {
@@ -71,22 +78,20 @@ public final class BeregnetSkatt {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BeregnetSkatt that = (BeregnetSkatt) o;
-        return personinntektLoenn == that.personinntektLoenn &&
-                personinntektFiskeFangstFamiliebarnehage == that.personinntektFiskeFangstFamiliebarnehage &&
-                personinntektNaering == that.personinntektNaering &&
-                personinntektBarePensjonsdel == that.personinntektBarePensjonsdel &&
-                svalbardLoennLoennstrekkordningen == that.svalbardLoennLoennstrekkordningen &&
-                svalbardPersoninntektNaering == that.svalbardPersoninntektNaering &&
-                skjermet == that.skjermet &&
+        return skjermet == that.skjermet &&
                 Objects.equals(personidentifikator, that.personidentifikator) &&
-                Objects.equals(inntektsaar, that.inntektsaar);
+                Objects.equals(inntektsaar, that.inntektsaar) &&
+                Objects.equals(personinntektLoenn, that.personinntektLoenn) &&
+                Objects.equals(personinntektFiskeFangstFamiliebarnehage, that.personinntektFiskeFangstFamiliebarnehage) &&
+                Objects.equals(personinntektNaering, that.personinntektNaering) &&
+                Objects.equals(personinntektBarePensjonsdel, that.personinntektBarePensjonsdel) &&
+                Objects.equals(svalbardLoennLoennstrekkordningen, that.svalbardLoennLoennstrekkordningen) &&
+                Objects.equals(svalbardPersoninntektNaering, that.svalbardPersoninntektNaering);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(personidentifikator, inntektsaar, personinntektLoenn,
-                personinntektFiskeFangstFamiliebarnehage, personinntektNaering, personinntektBarePensjonsdel,
-                svalbardLoennLoennstrekkordningen, svalbardPersoninntektNaering, skjermet);
+        return Objects.hash(personidentifikator, inntektsaar, personinntektLoenn, personinntektFiskeFangstFamiliebarnehage, personinntektNaering, personinntektBarePensjonsdel, svalbardLoennLoennstrekkordningen, svalbardPersoninntektNaering, skjermet);
     }
 
     @Override

@@ -22,12 +22,12 @@ public class BeregnetSkattDtoTest {
         BeregnetSkattDto beregnetSkatt = mapper.readValue(jsonString, BeregnetSkattDto.class);
         assertEquals("12345678901", beregnetSkatt.getPersonidentifikator());
         assertEquals("2016", beregnetSkatt.getInntektsaar());
-        assertNull(beregnetSkatt.getPersoninntektLoenn());
-        assertNull(beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage());
-        assertNull(beregnetSkatt.getPersoninntektNaering());
-        assertNull(beregnetSkatt.getPersoninntektBarePensjonsdel());
-        assertNull(beregnetSkatt.getSvalbardLoennLoennstrekkordningen());
-        assertNull(beregnetSkatt.getSvalbardPersoninntektNaering());
+        assertNull(beregnetSkatt.getPersoninntektLoenn().orElse(null));
+        assertNull(beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage().orElse(null));
+        assertNull(beregnetSkatt.getPersoninntektNaering().orElse(null));
+        assertNull(beregnetSkatt.getPersoninntektBarePensjonsdel().orElse(null));
+        assertNull(beregnetSkatt.getSvalbardLoennLoennstrekkordningen().orElse(null));
+        assertNull(beregnetSkatt.getSvalbardPersoninntektNaering().orElse(null));
     }
 
     @Test
@@ -48,12 +48,12 @@ public class BeregnetSkattDtoTest {
         BeregnetSkattDto beregnetSkatt = mapper.readValue(jsonString, BeregnetSkattDto.class);
         assertEquals("12345678901", beregnetSkatt.getPersonidentifikator());
         assertEquals("2016", beregnetSkatt.getInntektsaar());
-        assertEquals(490000, (long) beregnetSkatt.getPersoninntektLoenn());
-        assertEquals(90000, (long) beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage());
-        assertEquals(70000, (long) beregnetSkatt.getPersoninntektNaering());
-        assertEquals(40000, (long) beregnetSkatt.getPersoninntektBarePensjonsdel());
-        assertEquals(123456, (long) beregnetSkatt.getSvalbardLoennLoennstrekkordningen());
-        assertEquals(654321, (long) beregnetSkatt.getSvalbardPersoninntektNaering());
+        assertEquals((Long) 490000L, beregnetSkatt.getPersoninntektLoenn().orElse(null));
+        assertEquals((Long) 90000L, beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage().orElse(null));
+        assertEquals((Long) 70000L, beregnetSkatt.getPersoninntektNaering().orElse(null));
+        assertEquals((Long) 40000L, beregnetSkatt.getPersoninntektBarePensjonsdel().orElse(null));
+        assertEquals((Long) 123456L, beregnetSkatt.getSvalbardLoennLoennstrekkordningen().orElse(null));
+        assertEquals((Long) 654321L, beregnetSkatt.getSvalbardPersoninntektNaering().orElse(null));
     }
 
     @Test
@@ -70,11 +70,11 @@ public class BeregnetSkattDtoTest {
         BeregnetSkattDto beregnetSkatt = mapper.readValue(jsonString, BeregnetSkattDto.class);
         assertEquals("12345678901", beregnetSkatt.getPersonidentifikator());
         assertEquals("2016", beregnetSkatt.getInntektsaar());
-        assertEquals(490000, (long) beregnetSkatt.getPersoninntektLoenn());
-        assertEquals(90000, (long) beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage());
-        assertNull(beregnetSkatt.getPersoninntektNaering());
-        assertNull(beregnetSkatt.getPersoninntektBarePensjonsdel());
-        assertNull(beregnetSkatt.getSvalbardLoennLoennstrekkordningen());
-        assertNull(beregnetSkatt.getSvalbardPersoninntektNaering());
+        assertEquals((Long) 490000L, beregnetSkatt.getPersoninntektLoenn().orElse(null));
+        assertEquals((Long) 90000L, beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage().orElse(null));
+        assertNull(beregnetSkatt.getPersoninntektNaering().orElse(null));
+        assertNull(beregnetSkatt.getPersoninntektBarePensjonsdel().orElse(null));
+        assertNull(beregnetSkatt.getSvalbardLoennLoennstrekkordningen().orElse(null));
+        assertNull(beregnetSkatt.getSvalbardPersoninntektNaering().orElse(null));
     }
 }

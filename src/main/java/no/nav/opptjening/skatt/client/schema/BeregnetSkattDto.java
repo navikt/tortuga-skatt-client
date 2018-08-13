@@ -3,6 +3,9 @@ package no.nav.opptjening.skatt.client.schema;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+import java.util.OptionalLong;
+
 @JsonDeserialize(builder = BeregnetSkattDto.Builder.class)
 public final class BeregnetSkattDto {
 
@@ -16,7 +19,11 @@ public final class BeregnetSkattDto {
     private final Long svalbardPersoninntektNaering;
     private final boolean skjermet;
 
-    public BeregnetSkattDto(@Nullable String personidentifikator, @Nullable String inntektsaar, Long personinntektLoenn, Long personinntektFiskeFangstFamiliebarnehage, Long personinntektNaering, Long personinntektBarePensjonsdel, Long svalbardLoennLoennstrekkordningen, Long svalbardPersoninntektNaering, boolean skjermet) {
+    public BeregnetSkattDto(@Nullable String personidentifikator, @Nullable String inntektsaar,
+                            @Nullable Long personinntektLoenn, @Nullable Long personinntektFiskeFangstFamiliebarnehage,
+                            @Nullable Long personinntektNaering, @Nullable Long personinntektBarePensjonsdel,
+                            @Nullable Long svalbardLoennLoennstrekkordningen, @Nullable Long svalbardPersoninntektNaering,
+                            boolean skjermet) {
         this.personidentifikator = personidentifikator;
         this.inntektsaar = inntektsaar;
         this.personinntektLoenn = personinntektLoenn;
@@ -38,28 +45,28 @@ public final class BeregnetSkattDto {
         return inntektsaar;
     }
 
-    public Long getPersoninntektLoenn() {
-        return personinntektLoenn;
+    public Optional<Long> getPersoninntektLoenn() {
+        return Optional.ofNullable(personinntektLoenn);
     }
 
-    public Long getPersoninntektFiskeFangstFamiliebarnehage() {
-        return personinntektFiskeFangstFamiliebarnehage;
+    public Optional<Long> getPersoninntektFiskeFangstFamiliebarnehage() {
+        return Optional.ofNullable(personinntektFiskeFangstFamiliebarnehage);
     }
 
-    public Long getPersoninntektNaering() {
-        return personinntektNaering;
+    public Optional<Long> getPersoninntektNaering() {
+        return Optional.ofNullable(personinntektNaering);
     }
 
-    public Long getPersoninntektBarePensjonsdel() {
-        return personinntektBarePensjonsdel;
+    public Optional<Long> getPersoninntektBarePensjonsdel() {
+        return Optional.ofNullable(personinntektBarePensjonsdel);
     }
 
-    public Long getSvalbardLoennLoennstrekkordningen() {
-        return svalbardLoennLoennstrekkordningen;
+    public Optional<Long> getSvalbardLoennLoennstrekkordningen() {
+        return Optional.ofNullable(svalbardLoennLoennstrekkordningen);
     }
 
-    public Long getSvalbardPersoninntektNaering() {
-        return svalbardPersoninntektNaering;
+    public Optional<Long> getSvalbardPersoninntektNaering() {
+        return Optional.ofNullable(svalbardPersoninntektNaering);
     }
 
     public boolean isSkjermet() {

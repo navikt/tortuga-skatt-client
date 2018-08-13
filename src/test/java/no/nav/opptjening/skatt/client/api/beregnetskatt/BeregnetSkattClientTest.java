@@ -7,7 +7,6 @@ import no.nav.opptjening.skatt.client.api.exceptions.UkjentFeilkodeException;
 import no.nav.opptjening.skatt.client.exceptions.BadRequestException;
 import no.nav.opptjening.skatt.client.exceptions.ClientException;
 import no.nav.opptjening.skatt.client.exceptions.ServerException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,12 +47,12 @@ public class BeregnetSkattClientTest {
 
         assertEquals("12345678901", result.getPersonidentifikator());
         assertEquals("2016", result.getInntektsaar());
-        assertEquals(490000, result.getPersoninntektLoenn(), 0);
-        assertEquals(90000, result.getPersoninntektFiskeFangstFamiliebarnehage(), 0);
-        assertEquals(70000, result.getPersoninntektNaering(), 0);
-        assertEquals(40000, result.getPersoninntektBarePensjonsdel(), 0);
-        assertEquals(123456, result.getSvalbardLoennLoennstrekkordningen(), 0);
-        assertEquals(123456, result.getSvalbardPersoninntektNaering(), 0);
+        assertEquals((Long) 490000L, result.getPersoninntektLoenn().orElse(null));
+        assertEquals((Long) 90000L, result.getPersoninntektFiskeFangstFamiliebarnehage().orElse(null));
+        assertEquals((Long) 70000L, result.getPersoninntektNaering().orElse(null));
+        assertEquals((Long) 40000L, result.getPersoninntektBarePensjonsdel().orElse(null));
+        assertEquals((Long) 123456L, result.getSvalbardLoennLoennstrekkordningen().orElse(null));
+        assertEquals((Long) 123456L, result.getSvalbardPersoninntektNaering().orElse(null));
     }
 
     @Test
@@ -72,12 +71,12 @@ public class BeregnetSkattClientTest {
 
         assertEquals("12345678901", result.getPersonidentifikator());
         assertEquals("2016", result.getInntektsaar());
-        assertEquals(490000, result.getPersoninntektLoenn(), 0);
-        assertNull(result.getPersoninntektFiskeFangstFamiliebarnehage());
-        assertNull(result.getPersoninntektNaering());
-        assertNull(result.getPersoninntektBarePensjonsdel());
-        assertNull(result.getSvalbardLoennLoennstrekkordningen());
-        assertNull(result.getSvalbardPersoninntektNaering());
+        assertEquals((Long) 490000L, result.getPersoninntektLoenn().orElse(null));
+        assertNull(result.getPersoninntektFiskeFangstFamiliebarnehage().orElse(null));
+        assertNull(result.getPersoninntektNaering().orElse(null));
+        assertNull(result.getPersoninntektBarePensjonsdel().orElse(null));
+        assertNull(result.getSvalbardLoennLoennstrekkordningen().orElse(null));
+        assertNull(result.getSvalbardPersoninntektNaering().orElse(null));
     }
 
     @Test
@@ -126,12 +125,12 @@ public class BeregnetSkattClientTest {
 
         assertEquals("12345678901", result.getPersonidentifikator());
         assertEquals("2016", result.getInntektsaar());
-        assertEquals(490000, result.getPersoninntektLoenn(), 0);
-        assertEquals(90000, result.getPersoninntektFiskeFangstFamiliebarnehage(), 0);
-        assertEquals(70000, result.getPersoninntektNaering(), 0);
-        assertEquals(40000, result.getPersoninntektBarePensjonsdel(), 0);
-        assertEquals(123456, result.getSvalbardLoennLoennstrekkordningen(), 0);
-        assertEquals(123456, result.getSvalbardPersoninntektNaering(), 0);
+        assertEquals((Long) 490000L, result.getPersoninntektLoenn().orElse(null));
+        assertEquals((Long) 90000L, result.getPersoninntektFiskeFangstFamiliebarnehage().orElse(null));
+        assertEquals((Long) 70000L, result.getPersoninntektNaering().orElse(null));
+        assertEquals((Long) 40000L, result.getPersoninntektBarePensjonsdel().orElse(null));
+        assertEquals((Long) 123456L, result.getSvalbardLoennLoennstrekkordningen().orElse(null));
+        assertEquals((Long) 123456L, result.getSvalbardPersoninntektNaering().orElse(null));
     }
 
     @Test

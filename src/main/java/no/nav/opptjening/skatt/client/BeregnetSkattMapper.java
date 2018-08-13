@@ -15,9 +15,13 @@ public class BeregnetSkattMapper {
         if (inntektsaar == null) {
             throw new NullPointerException("Inntektsaar is null");
         }
-        return new BeregnetSkatt(personidentifikator, inntektsaar, beregnetSkattDto.getPersoninntektLoenn(),
-                beregnetSkattDto.getPersoninntektFiskeFangstFamiliebarnehage(), beregnetSkattDto.getPersoninntektNaering(),
-                beregnetSkattDto.getPersoninntektBarePensjonsdel(), beregnetSkattDto.getSvalbardLoennLoennstrekkordningen(),
-                beregnetSkattDto.getSvalbardPersoninntektNaering(), beregnetSkattDto.isSkjermet());
+        return new BeregnetSkatt(personidentifikator, inntektsaar,
+                beregnetSkattDto.getPersoninntektLoenn().orElse(null),
+                beregnetSkattDto.getPersoninntektFiskeFangstFamiliebarnehage().orElse(null),
+                beregnetSkattDto.getPersoninntektNaering().orElse(null),
+                beregnetSkattDto.getPersoninntektBarePensjonsdel().orElse(null),
+                beregnetSkattDto.getSvalbardLoennLoennstrekkordningen().orElse(null),
+                beregnetSkattDto.getSvalbardPersoninntektNaering().orElse(null),
+                beregnetSkattDto.isSkjermet());
     }
 }

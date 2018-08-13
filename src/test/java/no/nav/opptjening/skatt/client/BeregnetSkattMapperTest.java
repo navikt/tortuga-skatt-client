@@ -18,12 +18,12 @@ public class BeregnetSkattMapperTest {
 
         assertEquals("123456", beregnetSkatt.getPersonidentifikator());
         assertEquals("2018", beregnetSkatt.getInntektsaar());
-        assertEquals(1, (long) beregnetSkatt.getPersoninntektLoenn());
-        assertEquals(2, (long) beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage());
-        assertEquals(3, (long) beregnetSkatt.getPersoninntektNaering());
-        assertEquals(4, (long) beregnetSkatt.getPersoninntektBarePensjonsdel());
-        assertEquals(5, (long) beregnetSkatt.getSvalbardLoennLoennstrekkordningen());
-        assertEquals(6, (long) beregnetSkatt.getSvalbardPersoninntektNaering());
+        assertEquals((Long) 1L, beregnetSkatt.getPersoninntektLoenn().orElse(null));
+        assertEquals((Long) 2L, beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage().orElse(null));
+        assertEquals((Long) 3L, beregnetSkatt.getPersoninntektNaering().orElse(null));
+        assertEquals((Long) 4L, beregnetSkatt.getPersoninntektBarePensjonsdel().orElse(null));
+        assertEquals((Long) 5L, beregnetSkatt.getSvalbardLoennLoennstrekkordningen().orElse(null));
+        assertEquals((Long) 6L, beregnetSkatt.getSvalbardPersoninntektNaering().orElse(null));
         assertFalse(beregnetSkatt.isSkjermet());
     }
 
@@ -34,12 +34,12 @@ public class BeregnetSkattMapperTest {
 
         assertEquals("123456", beregnetSkatt.getPersonidentifikator());
         assertEquals("2018", beregnetSkatt.getInntektsaar());
-        assertEquals(1, (long) beregnetSkatt.getPersoninntektLoenn());
-        assertEquals(2, (long) beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage());
-        assertEquals(3, (long) beregnetSkatt.getPersoninntektNaering());
-        assertEquals(4, (long) beregnetSkatt.getPersoninntektBarePensjonsdel());
-        assertNull(beregnetSkatt.getSvalbardLoennLoennstrekkordningen());
-        assertNull(beregnetSkatt.getSvalbardPersoninntektNaering());
+        assertEquals((Long) 1L, beregnetSkatt.getPersoninntektLoenn().orElse(null));
+        assertEquals((Long) 2L, beregnetSkatt.getPersoninntektFiskeFangstFamiliebarnehage().orElse(null));
+        assertEquals((Long) 3L, beregnetSkatt.getPersoninntektNaering().orElse(null));
+        assertEquals((Long) 4L, beregnetSkatt.getPersoninntektBarePensjonsdel().orElse(null));
+        assertNull(beregnetSkatt.getSvalbardLoennLoennstrekkordningen().orElse(null));
+        assertNull(beregnetSkatt.getSvalbardPersoninntektNaering().orElse(null));
         assertFalse(beregnetSkatt.isSkjermet());
     }
 
