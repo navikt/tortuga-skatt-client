@@ -34,6 +34,15 @@ public abstract class AbstractClient<T> {
     private final ErrorResponseMapper errorResponseMapper;
 
     protected AbstractClient(String endepunkt, String apiKey, Class<T> api) {
+
+        if(endepunkt == null) {
+            throw new MissingClientConfigurationException("Missing endpoint URL in client configuration");
+        }
+
+        if(apiKey == null) {
+            throw new MissingClientConfigurationException("Missing API key in client configuration");
+        }
+
         Retrofit retrofit = createRetrofit(createHttpClient(apiKey), endepunkt, JacksonConverterFactory.create(objectMapper));
 
         this.api = retrofit.create(api);
