@@ -56,6 +56,7 @@ public abstract class AbstractClient<T> {
                 .addNetworkInterceptor(new HttpRequestLogger("X-NAV-APIKEY"))
                 .addNetworkInterceptor(new HttpResponseLogger())
                 .addInterceptor(new HeaderInterceptor("X-NAV-APIKEY", apiKey))
+                .addInterceptor(new HeaderInterceptor("Accept", "application/json"))
                 .build();
     }
 
